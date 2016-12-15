@@ -1,3 +1,24 @@
 <resources>
+    <!-- App Basics -->
     <string name="app_name">StudentQR</string>
+
+    <!-- Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- LAUNCHER Activity -->
+
+    <!-- Main Activity -->
+    <string name="action_fetch_qrCodeString">Update</string>
+    <string name="message_qrCodeFetching">Fetching QR Code</string>
+
+    <!-- Login Activity -->
+    <string name="login_header" translatable="false"> ASE \nLogo</string>
+    <string name="login_email">email</string>
+    <string name="login_password">password</string>
+    <string name="menu_settings">settings</string>
+    <string name="menu_slideshow">slideshow</string>
+    <string name="menu_account">account</string>
+
 </resources>
