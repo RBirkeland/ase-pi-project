@@ -2,6 +2,7 @@ package aseproject.group6.group9.studentqr;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -54,13 +54,17 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String SHARED_PREFERENCES_KEY = "QR_SHARED";
+    public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     private GoogleApiClient client;
-    static TextView actionText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        restoreQrCode();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -86,6 +90,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private void restoreQrCode() {
+        // Restore shared preferences
+        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        String qrCodeString = settings.getString(QR_CODE_PREFERENCES_KEY, null);
+
+        if (qrCodeString != null) {
+           generateQRCodeImage(qrCodeString);
+        }
+    }
+
     public void generateQRCodeImage(String qrCodeString){
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -94,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             ImageView imageView = (ImageView) this.findViewById(R.id.qrCode);
             imageView.setImageBitmap(bitmap);
+
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -126,8 +141,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_fetch_qrCodeString) {
             doRestCallAsync();
             return true;
+        } else if (id == R.id.action_remove_sharedPreferences) {
+            removeQrSharedPreferences();
+            ImageView qrCodeImage = (ImageView) findViewById(R.id.qrCode);
+            // TODO may find a better solution
+            qrCodeImage.setImageResource(R.drawable.ic_menu_slideshow);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void removeQrSharedPreferences() {
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        preferences.edit().remove(QR_CODE_PREFERENCES_KEY).commit();
     }
 
     private void doRestCallAsync() {
@@ -146,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_account) {
-            // Handle the action
+            // switching to Account Activity
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra(EXTRA_MESSAGE, "change");
             startActivity(intent);
@@ -238,8 +263,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            addQrSharedPreferences(content);
             generateQRCodeImage(content);
         }
+    }
+
+    private void addQrSharedPreferences(String qrCodeString) {
+        /* Shared Preferences */
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(QR_CODE_PREFERENCES_KEY, qrCodeString);
+        editor.commit();
     }
 
 

@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="@string/action_fetch_qrCodeString"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_remove_sharedPreferences"
+        android:orderInCategory="100"
+        android:title="@string/action_remove_sharedPreferences"
+        app:showAsAction="never" />
 </menu>

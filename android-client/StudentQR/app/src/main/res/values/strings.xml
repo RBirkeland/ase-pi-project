@@ -12,6 +12,7 @@
     <!-- Main Activity -->
     <string name="action_fetch_qrCodeString">Update</string>
     <string name="message_qrCodeFetching">Fetching QR Code</string>
+    <string name="action_remove_sharedPreferences">remove QR code</string>
 
     <!-- Login Activity -->
     <string name="login_header" translatable="false"> ASE \nLogo</string>
@@ -20,5 +21,6 @@
     <string name="menu_settings">settings</string>
     <string name="menu_slideshow">slideshow</string>
     <string name="menu_account">account</string>
+
 
 </resources>
