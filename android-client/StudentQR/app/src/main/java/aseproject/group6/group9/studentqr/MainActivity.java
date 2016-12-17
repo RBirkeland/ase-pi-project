@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -106,8 +107,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             BitMatrix bitMatrix = multiFormatWriter.encode(qrCodeString, BarcodeFormat.QR_CODE,200,200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            ImageView imageView = (ImageView) this.findViewById(R.id.qrCode);
-            imageView.setImageBitmap(bitmap);
+            ImageView qrCodeImage = (ImageView) this.findViewById(R.id.qrCode);
+            qrCodeImage.setImageBitmap(bitmap);
+            qrCodeImage.setVisibility(View.VISIBLE);
 
         } catch (WriterException e) {
             e.printStackTrace();
@@ -144,8 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.action_remove_sharedPreferences) {
             removeQrSharedPreferences();
             ImageView qrCodeImage = (ImageView) findViewById(R.id.qrCode);
-            // TODO may find a better solution
-            qrCodeImage.setImageResource(R.drawable.ic_menu_slideshow);
+            qrCodeImage.setVisibility(View.INVISIBLE);
         }
         return super.onOptionsItemSelected(item);
     }
