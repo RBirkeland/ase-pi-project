@@ -20,11 +20,13 @@
     <string name="login_header" translatable="false"> ASE \nLogo</string>
     <string name="login_email">email</string>
     <string name="login_password">password</string>
+    <string name="login_button">login</string>
 
     <!-- Menu -->
     <string name="menu_settings">settings</string>
     <string name="menu_slideshow">slideshow</string>
     <string name="menu_account">account</string>
+    <string name="qr_code_string_status">No QR code fetched</string>
 
 
 </resources>

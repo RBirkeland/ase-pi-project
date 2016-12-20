@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         EditText passwordView = (EditText) findViewById(R.id.login_password);
         EditText emailView = (EditText) findViewById(R.id.login_email);
-
+        Button loginButtonView = (Button) findViewById(R.id.login_button);
     }
 
     @Override

@@ -13,4 +13,6 @@
     <string name="menu_account">Account</string>
     <string name="action_remove_sharedPreferences">Entferne QR code</string>
     <string name="qr_code_string_status">Kein QR Code geladen.</string>
+    <string name="login_button">Einloggen</string>
+    <string name="qr_code_status_string">Kein QR Code geladen.</string>
 </resources>
