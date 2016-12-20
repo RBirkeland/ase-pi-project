@@ -13,11 +13,15 @@
     <string name="action_fetch_qrCodeString">Update</string>
     <string name="message_qrCodeFetching">Fetching QR Code</string>
     <string name="action_remove_sharedPreferences">remove QR code</string>
+    <string name="qr_code_status_string">No QR code fetched</string>
+
 
     <!-- Login Activity -->
     <string name="login_header" translatable="false"> ASE \nLogo</string>
     <string name="login_email">email</string>
     <string name="login_password">password</string>
+
+    <!-- Menu -->
     <string name="menu_settings">settings</string>
     <string name="menu_slideshow">slideshow</string>
     <string name="menu_account">account</string>

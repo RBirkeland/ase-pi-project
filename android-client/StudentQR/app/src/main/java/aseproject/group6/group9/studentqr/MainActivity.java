@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -33,6 +33,7 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String SHARED_PREFERENCES_KEY = "QR_SHARED";
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
+    public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
+
     private GoogleApiClient client;
 
     @Override
@@ -95,9 +98,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Restore shared preferences
         SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
         String qrCodeString = settings.getString(QR_CODE_PREFERENCES_KEY, null);
+        String qrCodeStatusString = settings.getString(QR_CODE_STATUS_STRING_KEY, null);
 
         if (qrCodeString != null) {
-           generateQRCodeImage(qrCodeString);
+            generateQRCodeImage(qrCodeString);
+            TextView qrCodeStatusTextView = (TextView) findViewById(R.id.qrCodeStatusString);
+            qrCodeStatusTextView.setText(qrCodeStatusString);
         }
     }
 
@@ -110,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ImageView qrCodeImage = (ImageView) this.findViewById(R.id.qrCode);
             qrCodeImage.setImageBitmap(bitmap);
             qrCodeImage.setVisibility(View.VISIBLE);
+            TextView qrCodeStatus = (TextView) this.findViewById(R.id.qrCodeStatusString);
+            qrCodeStatus.setText("Fetched");
 
         } catch (WriterException e) {
             e.printStackTrace();
@@ -147,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             removeQrSharedPreferences();
             ImageView qrCodeImage = (ImageView) findViewById(R.id.qrCode);
             qrCodeImage.setVisibility(View.INVISIBLE);
+            TextView qrCodeStatus = (TextView) findViewById(R.id.qrCodeStatusString);
+            qrCodeStatus.setText("Please fetch your QR Code");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -206,9 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
@@ -238,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 rawAnswer = new ClientResource(urls[0].toString()).get().getText();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (ResourceException e) {
+                // TODO better log
+                Log.d("e", "404 or something");
             }
             return rawAnswer;
         }
@@ -276,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(QR_CODE_PREFERENCES_KEY, qrCodeString);
+        // TODO Put the String inside
+        editor.putString(QR_CODE_STATUS_STRING_KEY, "Done");
         editor.commit();
     }
 

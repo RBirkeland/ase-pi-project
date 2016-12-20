@@ -12,4 +12,5 @@
     <string name="menu_slideshow">SLIDESHOW</string>
     <string name="menu_account">Account</string>
     <string name="action_remove_sharedPreferences">Entferne QR code</string>
+    <string name="qr_code_string_status">Kein QR Code geladen.</string>
 </resources>
