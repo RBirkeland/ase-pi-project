@@ -22,7 +22,7 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class LauncherActivity extends AppCompatActivity {
 
-    public static final int LAUNCHER_TIME = 1000;
+    public static final int LAUNCHER_TIME = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
