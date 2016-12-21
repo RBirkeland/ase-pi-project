@@ -18,9 +18,14 @@
 
     <!-- Login Activity -->
     <string name="login_header" translatable="false"> ASE \nLogo</string>
+    <string name="login_status_text">Logged in as: %s</string>
     <string name="login_email">email</string>
     <string name="login_password">password</string>
     <string name="login_button">login</string>
+    <string name="logout_button">sign out</string>
+    <string name="auth_failed">The authentication failed</string>
+    <string name="auth_required">Required</string>
+    <string name="progress_loading">Loading...</string>
 
     <!-- Menu -->
     <string name="menu_settings">settings</string>

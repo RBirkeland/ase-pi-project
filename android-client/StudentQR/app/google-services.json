@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "956345502969",
+    "firebase_url": "https://ase-pi-project.firebaseio.com",
+    "project_id": "ase-pi-project",
+    "storage_bucket": "ase-pi-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956345502969:android:a3cca67ab2071173",
+        "android_client_info": {
+          "package_name": "aseproject.group6.group9.studentqr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "956345502969-5f7slkabr3u4n1ou3qc9a5kf9445odna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "aseproject.group6.group9.studentqr",
+            "certificate_hash": "969DD4308BE5A9667E6104F0A16D083E483E4593"
+          }
+        },
+        {
+          "client_id": "956345502969-so8vrlkqfmrrcskc58ik7ur9o6stk5g0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIQ3k6wZsGZr4Y9vfI3B8HqFztgzc_kWs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "956345502969-so8vrlkqfmrrcskc58ik7ur9o6stk5g0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 repositories {
@@ -32,13 +37,21 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    // Used for the RestService
     compile group: 'org.restlet.jse', name: 'org.restlet', version: '2.3.2'
+    // Used for the QR Code Creation
     compile group: 'com.google.zxing', name: 'core', version: '3.3.0'
     compile group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
     compile group: 'com.google.zxing', name: 'android-integration', version: '3.3.0'
-    compile group: 'com.journeyapps', name:'zxing-android-embedded', version: '3.3.0'
+    compile group: 'com.journeyapps', name: 'zxing-android-embedded', version: '3.3.0'
+    // Used for Login Purposes
+
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    compile 'com.firebase:firebase-client-android:2.5.2'
+    compile 'com.google.firebase:firebase-auth:9.8.0'
+    testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

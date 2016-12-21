@@ -15,4 +15,9 @@
     <string name="qr_code_string_status">Kein QR Code geladen.</string>
     <string name="login_button">Einloggen</string>
     <string name="qr_code_status_string">Kein QR Code geladen.</string>
+    <string name="login_status_text">Eingeloggt als: %s</string>
+    <string name="logout_button">Ausloggen</string>
+    <string name="auth_failed">Die Authentifizierung ist fehlgeschlagen</string>
+    <string name="auth_required">Benötigt</string>
+    <string name="progress_loading">Lädt...</string>
 </resources>
