@@ -5,4 +5,5 @@ package aseproject.group6.group9.studentqr;
  */
 
 public class Config {
+        public static final String FIREBASE_URL = "https://ase-pi-project.firebaseio.com/";
 }

@@ -25,6 +25,7 @@
     <string name="logout_button">sign out</string>
     <string name="auth_failed">The authentication failed</string>
     <string name="auth_required">Required</string>
+    <string name="err_msg_qr_fetching">The Server is not available right now.</string>
     <string name="progress_loading">Loading...</string>
 
     <!-- Menu -->

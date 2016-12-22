@@ -20,4 +20,5 @@
     <string name="auth_failed">Die Authentifizierung ist fehlgeschlagen</string>
     <string name="auth_required">Benötigt</string>
     <string name="progress_loading">Lädt...</string>
+    <string name="err_msg_qr_fetching">Der Server ist momentan nicht verfügbar.</string>
 </resources>

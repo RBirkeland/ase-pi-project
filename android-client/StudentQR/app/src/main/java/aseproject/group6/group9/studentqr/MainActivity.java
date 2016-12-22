@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("e", "There was an unknown exception during QRCodeGeneration");
+            Toast.makeText(MainActivity.this, R.string.err_msg_qr_fetching,
+                    Toast.LENGTH_LONG).show();
         }
     }
 

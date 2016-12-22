@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private EditText emailView;
     private Button loginButtonView;
     private TextView loginStatusView;
-    private TextView loginAccountNameView;
     private Button logoutButtonView;
 
     @VisibleForTesting
@@ -52,8 +51,11 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         emailView = (EditText) findViewById(R.id.login_email);
         loginButtonView = (Button) findViewById(R.id.login_button);
         loginStatusView = (TextView) findViewById(R.id.login_status_text);
-        loginAccountNameView = (TextView) findViewById(R.id.login_account_name_text);
         logoutButtonView = (Button) findViewById(R.id.logout_button);
+
+        loginButtonView.setOnClickListener(this);
+        logoutButtonView.setOnClickListener(this);
+
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -108,7 +110,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
-                            loginStatusView.setText(R.string.auth_failed);
+                            // TODO handling if login task is not successful
+                            //loginStatusView.setText(R.string.auth_failed);
                         }
                         hideProgressDialog();
                         // [END_EXCLUDE]
@@ -147,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            loginAccountNameView.setText(getString(R.string.login_status_text, user.getEmail()));
+            loginStatusView.setText(getString(R.string.login_status_text, user.getEmail()));
             //mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
             loginButtonView.setVisibility(View.GONE);
@@ -155,11 +158,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             passwordView.setVisibility(View.GONE);
 
             loginStatusView.setVisibility(View.VISIBLE);
-            loginAccountNameView.setVisibility(View.VISIBLE);
             logoutButtonView.setVisibility(View.VISIBLE);
 
         } else {
-            loginAccountNameView.setText(null);
+            loginStatusView.setText(null);
             //mDetailTextView.setText(null)
 
             loginButtonView.setVisibility(View.VISIBLE);
@@ -167,7 +169,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             passwordView.setVisibility(View.VISIBLE);
 
             loginStatusView.setVisibility(View.GONE);
-            loginAccountNameView.setVisibility(View.GONE);
             logoutButtonView.setVisibility(View.GONE);
         }
     }
