@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, R.string.message_qrCodeFetching, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(MainActivity.this, R.string.message_qrCodeFetching,
+                        Toast.LENGTH_SHORT).show();
                 doRestCallAsync();
             }
         });
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ImageView qrCodeImage = (ImageView) findViewById(R.id.qrCode);
             qrCodeImage.setVisibility(View.INVISIBLE);
             TextView qrCodeStatus = (TextView) findViewById(R.id.qrCodeStatusString);
-            qrCodeStatus.setText("Please fetch your QR Code");
+            qrCodeStatus.setText(R.string.please_fetch_qr);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -14,6 +14,7 @@
     <string name="message_qrCodeFetching">Fetching QR Code</string>
     <string name="action_remove_sharedPreferences">remove QR code</string>
     <string name="qr_code_status_string">No QR code fetched</string>
+    <string name="please_fetch_qr">Please fetch your QR Code</string>
 
 
     <!-- Login Activity -->
@@ -27,6 +28,7 @@
     <string name="auth_required">Required</string>
     <string name="err_msg_qr_fetching">The Server is not available right now.</string>
     <string name="progress_loading">Loading...</string>
+    <string name="drawer_login_main">Main View</string>
 
     <!-- Menu -->
     <string name="menu_settings">settings</string>
