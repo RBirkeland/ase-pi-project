@@ -30,6 +30,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 /**
@@ -83,12 +85,18 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                TextView navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
+                TextView navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    navigationViewUser.setText(user.getDisplayName());
+                    navigationViewEmail.setText(user.getEmail());
                 } else {
                     // User is signed out
+                    navigationViewUser.setText(R.string.nav_account_name);
+                    navigationViewEmail.setText(R.string.nav_user_email);
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 updateUI(user);

@@ -22,4 +22,7 @@
     <string name="progress_loading">Lädt...</string>
     <string name="err_msg_qr_fetching">Der Server ist momentan nicht verfügbar.</string>
     <string name="please_fetch_qr">Bitte frage deinen QR Code an.</string>
+    <string name="drawer_login_main">Hauptansicht</string>
+    <string name="nav_account_name">Nicht eingeloggt :(</string>
+    <string name="nav_user_email">Bitte einloggen!</string>
 </resources>

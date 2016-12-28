@@ -36,5 +36,8 @@
     <string name="menu_account">account</string>
     <string name="qr_code_string_status">No QR code fetched</string>
 
+    <!-- Nav Header Main -->
+    <string name="nav_account_name">Not logged in :(</string>
+    <string name="nav_user_email">Please sign in!</string>
 
 </resources>
