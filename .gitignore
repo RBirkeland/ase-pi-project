@@ -45,3 +45,7 @@ target/*
 
 # Keystore files
 *.jks
+
+# wars/jars and stuff
+webapp/target/*
+webapp/src/main/webapp/.idea*
