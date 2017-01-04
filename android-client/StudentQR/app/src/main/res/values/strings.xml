@@ -15,6 +15,7 @@
     <string name="action_remove_sharedPreferences">remove QR code</string>
     <string name="qr_code_status_string">No QR code fetched</string>
     <string name="please_fetch_qr">Please fetch your QR Code</string>
+    <string name="message_qrCodeFetchingNoAccount">QR Code could not be fetched, please check your login status!</string>
 
 
     <!-- Login Activity -->

@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "LOGIN";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private TextView navigationViewUser;
+    private TextView navigationViewEmail;
+
 
     private GoogleApiClient client;
 
@@ -79,12 +82,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
+        navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fetchQrCodeButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, R.string.message_qrCodeFetching,
-                        Toast.LENGTH_SHORT).show();
                 doRestCallAsync();
             }
         });
@@ -103,18 +107,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                TextView navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
-                TextView navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    navigationViewUser.setText(user.getDisplayName());
-                    navigationViewEmail.setText(user.getEmail());
+                    //navigationViewUser.setText("");
+                    //navigationViewEmail.setText(user.getEmail());
                 } else {
                     // User is signed out
-                    navigationViewUser.setText(R.string.nav_account_name);
-                    navigationViewEmail.setText(R.string.nav_user_email);
+                    //navigationViewUser.setText(R.string.nav_account_name);
+                    //navigationViewEmail.setText(R.string.nav_user_email);
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
@@ -196,12 +198,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void doRestCallAsync() {
-        String url = "http://www.ase-pi-project.appspot.com/rest/mockService/"+mAuth.getCurrentUser().getUid();
 
-        try {
-            new DownloadQRCodeTask(MainActivity.this).execute(new URL(url));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        Toast.makeText(MainActivity.this, R.string.message_qrCodeFetching,
+                Toast.LENGTH_SHORT).show();
+
+        if(isLoginStatusValid()){
+            String url = "http://www.ase-pi-project.appspot.com/rest/mockService/"+mAuth.getCurrentUser().getUid();
+
+            try {
+                new DownloadQRCodeTask(MainActivity.this).execute(new URL(url));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingNoAccount,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean isLoginStatusValid() {
+        if (mAuth.getCurrentUser() != null){
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -247,13 +266,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onStart() {
         super.onStart();
         client.connect();
+        mAuth.addAuthStateListener(mAuthListener);
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
