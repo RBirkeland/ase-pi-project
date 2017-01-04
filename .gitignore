@@ -49,3 +49,6 @@ target/*
 # wars/jars and stuff
 webapp/target/*
 webapp/src/main/webapp/.idea*
+
+#sensitive stuff
+webapp//src/main/webapp/index.html
