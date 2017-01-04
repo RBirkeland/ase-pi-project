@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -60,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String SHARED_PREFERENCES_KEY = "QR_SHARED";
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
+    private static final String TAG = "LOGIN";
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     private GoogleApiClient client;
 
@@ -92,6 +98,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                TextView navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
+                TextView navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    navigationViewUser.setText(user.getDisplayName());
+                    navigationViewEmail.setText(user.getEmail());
+                } else {
+                    // User is signed out
+                    navigationViewUser.setText(R.string.nav_account_name);
+                    navigationViewEmail.setText(R.string.nav_user_email);
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
     }
 
     private void restoreQrCode() {
