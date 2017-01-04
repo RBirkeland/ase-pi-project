@@ -192,11 +192,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void removeQrSharedPreferences() {
         SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
-        preferences.edit().remove(QR_CODE_PREFERENCES_KEY).commit();
+        preferences.edit().remove(QR_CODE_PREFERENCES_KEY).apply();
     }
 
     private void doRestCallAsync() {
-        String url = "http://www.thomas-bayer.com/sqlrest/CUSTOMER/3/";
+        String url = "http://www.ase-pi-project.appspot.com/rest/mockService/"+mAuth.getCurrentUser().getUid();
+
         try {
             new DownloadQRCodeTask(MainActivity.this).execute(new URL(url));
         } catch (MalformedURLException e) {
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.printStackTrace();
             } catch (ResourceException e) {
                 // TODO better log
+                e.printStackTrace();
                 Log.d("e", "404 or something");
             }
             return rawAnswer;
@@ -293,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Document doc = builder.parse(is);
 
                 XPath xpath = XPathFactory.newInstance().newXPath();
-                NodeList nodes = (NodeList) xpath.evaluate("//*/LASTNAME/text()", doc, XPathConstants.NODESET);
+                NodeList nodes = (NodeList) xpath.evaluate("//*/qr/text()", doc, XPathConstants.NODESET);
                 int length = nodes.getLength();
                 for (int i = 0; i < length; i++) {
                     //content += "\n" + (i + 1) + ". " + nodes.item(i).getNodeValue();
@@ -317,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.putString(QR_CODE_PREFERENCES_KEY, qrCodeString);
         // TODO Put the String inside
         editor.putString(QR_CODE_STATUS_STRING_KEY, "Done");
-        editor.commit();
+        editor.apply();
     }
 
 

@@ -9,15 +9,19 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "0.1"
+        multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
-            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        preDexLibraries = false
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -40,10 +44,13 @@ dependencies {
     })
     // Used for the RestService
     compile group: 'org.restlet.jse', name: 'org.restlet', version: '2.3.2'
+    // Used for Multidexing according to old android devices
+    compile 'com.android.support:multidex:1.0.1'
+
     // Used for the QR Code Creation
     compile group: 'com.google.zxing', name: 'core', version: '3.3.0'
-    compile group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
-    compile group: 'com.google.zxing', name: 'android-integration', version: '3.3.0'
+    //compile group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
+    //compile group: 'com.google.zxing', name: 'android-integration', version: '3.3.0'
     compile group: 'com.journeyapps', name: 'zxing-android-embedded', version: '3.3.0'
     // Used for Login Purposes
 
