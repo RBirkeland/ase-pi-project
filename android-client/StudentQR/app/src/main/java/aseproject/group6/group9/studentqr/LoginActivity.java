@@ -1,13 +1,11 @@
 package aseproject.group6.group9.studentqr;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,9 +28,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+
+import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * Created by Florian Schulz on 13.12.2016.
@@ -49,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private Button loginButtonView;
     private TextView loginStatusView;
     private Button logoutButtonView;
+    public static final String PREF_REST_TOKEN = "restToken";
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
@@ -57,6 +66,13 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // TODO remove after checking the json stuff works
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_login);
         setSupportActionBar(toolbar);
@@ -114,6 +130,88 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
+    private void fetchRestAuthToken(String email, String password) {
+        // TODO, what if, credentials are wrong...maybe on continue, after sign in
+
+        // send request to server
+
+        // get request from server
+
+        String urlString = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDW2PaX5m9MwqGDKK-mSLFFfCscbJfF5ek";
+        try{
+            JSONObject jsonObject = postJSONObjectToURL(urlString, email, password);
+            String jsonObjectString = jsonObject.toString();
+
+            System.out.println("JSON OBJECT");
+            Log.d("myLocalIDis: ", jsonObject.getString("localID"));
+            Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
+            System.out.println("JSON OBJECT");
+            // TODO Parse JSON
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+        }
+    }
+
+    public static JSONObject postJSONObjectToURL(String urlString, String email, String password) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setDoOutput(true);
+        //urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        JSONObject request = new JSONObject();
+
+        request.put("email", email);
+        request.put("password", password);
+        request.put("returnSecureToken", "true");
+
+        Log.d("REQUEST_URL", request.toString());
+        Charset charset = Charset.forName("UTF8");
+
+        OutputStreamWriter wr= new OutputStreamWriter(urlConnection.getOutputStream(), charset);
+        wr.write(request.toString());
+        wr.close();
+
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONObject(sb.toString());
+    }
+
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
@@ -121,6 +219,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
 
         showProgressDialog();
+
+        // TODO implement better
+        fetchRestAuthToken(email, password);
+
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -148,6 +250,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     }
                 });
         // [END sign_in_with_email]
+
     }
 
     private void signOut() {
