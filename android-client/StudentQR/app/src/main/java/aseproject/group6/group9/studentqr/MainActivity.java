@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -60,9 +61,9 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String SHARED_PREFERENCES_KEY = "QR_SHARED";
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
+    public static final String PREF_REST_TOKEN = "restToken";
     private static final String TAG = "LOGIN";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void restoreQrCode() {
         // Restore shared preferences
-        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String qrCodeString = settings.getString(QR_CODE_PREFERENCES_KEY, null);
         String qrCodeStatusString = settings.getString(QR_CODE_STATUS_STRING_KEY, null);
 
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void removeQrSharedPreferences() {
-        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.edit().remove(QR_CODE_PREFERENCES_KEY).apply();
     }
 
@@ -336,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* Shared Preferences */
         // We need an Editor object to make preference changes.
         // All objects are from android.context.Context
-        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(QR_CODE_PREFERENCES_KEY, qrCodeString);
         // TODO Put the String inside

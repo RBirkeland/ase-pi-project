@@ -27,7 +27,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,7 +59,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private Button loginButtonView;
     private TextView loginStatusView;
     private Button logoutButtonView;
-    public static final String PREF_REST_TOKEN = "restToken";
+    public static final String API_URL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDW2PaX5m9MwqGDKK-mSLFFfCscbJfF5ek";
+
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
@@ -107,6 +110,25 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
+                    final String useruid = user.getUid();
+
+                    user.getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TOKEN_STUFF______: ", task.getResult().getToken());
+
+                                String url = "https://ase-pi-project.firebaseio.com/user/id/" + useruid +"/week/1.json?auth="+task.getResult().getToken();
+
+                                fetchRestAuthToken(url, "none", "tset");
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Authentication failed:" +
+                                        task.getException(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
                     navigationViewUser.setText(user.getDisplayName());
                     navigationViewEmail.setText(user.getEmail());
                 } else {
@@ -130,22 +152,24 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    private void fetchRestAuthToken(String email, String password) {
+    private void fetchRestAuthToken(String url, String email, String password) {
         // TODO, what if, credentials are wrong...maybe on continue, after sign in
 
         // send request to server
 
         // get request from server
 
-        String urlString = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDW2PaX5m9MwqGDKK-mSLFFfCscbJfF5ek";
         try{
-            JSONObject jsonObject = postJSONObjectToURL(urlString, email, password);
-            String jsonObjectString = jsonObject.toString();
+            JSONObject jsonObject = getJSONObjectFromURL(url);
+            //JSONArray jsonArray = getJSONArrayFromURL(url);
 
-            System.out.println("JSON OBJECT");
-            Log.d("myLocalIDis: ", jsonObject.getString("localID"));
-            Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
-            System.out.println("JSON OBJECT");
+            String jsonObjectString = jsonObject.toString();
+            //String jsonArrayString = jsonArray.toString();
+
+            //System.out.println("JSON OBJECT");
+            //Log.d("myLocalIDis: ", jsonObject.getString("localID"));
+            //Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
+            //System.out.println("JSON OBJECT");
             // TODO Parse JSON
 
         } catch (IOException e) {
@@ -154,6 +178,92 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             e.printStackTrace();
             e.printStackTrace();
         }
+    }
+
+    public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        //urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONObject(sb.toString());
+    }
+
+    public static JSONArray getJSONArrayFromURL(String urlString) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        //urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        JSONObject request = new JSONObject();
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONArray(sb.toString());
     }
 
     public static JSONObject postJSONObjectToURL(String urlString, String email, String password) throws IOException, JSONException {
@@ -221,7 +331,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         showProgressDialog();
 
         // TODO implement better
-        fetchRestAuthToken(email, password);
+        //fetchRestAuthToken(email, password);
 
 
         // [START sign_in_with_email]
