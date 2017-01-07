@@ -387,50 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return new JSONObject(sb.toString());
     }
 
-    public static JSONArray getJSONArrayFromURL(String urlString) throws IOException, JSONException {
-
-        URL url = new URL(urlString);
-
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        //urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.connect();
-
-        JSONObject request = new JSONObject();
-
-        StringBuilder sb = new StringBuilder();
-        int HttpResult = urlConnection.getResponseCode();
-        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            System.out.println("" + sb.toString());
-        } else if(HttpResult == 400) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(urlConnection.getResponseMessage());
-        }
-
-        return new JSONArray(sb.toString());
-    }
-    
     private class DownloadJSONQRCodeTask extends AsyncTask<Void, Integer, String> {
 
         private Activity activity;
