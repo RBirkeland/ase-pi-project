@@ -50,7 +50,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private GoogleApiClient client;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "LOGIN";
@@ -59,8 +58,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private Button loginButtonView;
     private TextView loginStatusView;
     private Button logoutButtonView;
-    public static final String API_URL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDW2PaX5m9MwqGDKK-mSLFFfCscbJfF5ek";
-
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
@@ -111,24 +108,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    final String useruid = user.getUid();
-
-                    user.getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("TOKEN_STUFF______: ", task.getResult().getToken());
-
-                                String url = "https://ase-pi-project.firebaseio.com/user/id/" + useruid +"/week/1.json?auth="+task.getResult().getToken();
-
-                                fetchRestAuthToken(url, "none", "tset");
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Authentication failed:" +
-                                        task.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
                     navigationViewUser.setText(user.getDisplayName());
                     navigationViewEmail.setText(user.getEmail());
                 } else {
@@ -142,6 +121,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         };
     }
 
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -152,176 +132,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    private void fetchRestAuthToken(String url, String email, String password) {
-        // TODO, what if, credentials are wrong...maybe on continue, after sign in
-
-        // send request to server
-
-        // get request from server
-
-        try{
-            JSONObject jsonObject = getJSONObjectFromURL(url);
-            //JSONArray jsonArray = getJSONArrayFromURL(url);
-
-            String jsonObjectString = jsonObject.toString();
-            //String jsonArrayString = jsonArray.toString();
-
-            //System.out.println("JSON OBJECT");
-            //Log.d("myLocalIDis: ", jsonObject.getString("localID"));
-            //Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
-            //System.out.println("JSON OBJECT");
-            // TODO Parse JSON
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            e.printStackTrace();
-        }
-    }
-
-    public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
-
-        URL url = new URL(urlString);
-
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        //urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.connect();
-
-        StringBuilder sb = new StringBuilder();
-        int HttpResult = urlConnection.getResponseCode();
-        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            System.out.println("" + sb.toString());
-        } else if(HttpResult == 400) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(urlConnection.getResponseMessage());
-        }
-
-        return new JSONObject(sb.toString());
-    }
-
-    public static JSONArray getJSONArrayFromURL(String urlString) throws IOException, JSONException {
-
-        URL url = new URL(urlString);
-
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        //urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.connect();
-
-        JSONObject request = new JSONObject();
-
-        StringBuilder sb = new StringBuilder();
-        int HttpResult = urlConnection.getResponseCode();
-        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            System.out.println("" + sb.toString());
-        } else if(HttpResult == 400) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(urlConnection.getResponseMessage());
-        }
-
-        return new JSONArray(sb.toString());
-    }
-
-    public static JSONObject postJSONObjectToURL(String urlString, String email, String password) throws IOException, JSONException {
-
-        URL url = new URL(urlString);
-
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        urlConnection.setDoOutput(true);
-        //urlConnection.setDoInput(true);
-        urlConnection.connect();
-
-        JSONObject request = new JSONObject();
-
-        request.put("email", email);
-        request.put("password", password);
-        request.put("returnSecureToken", "true");
-
-        Log.d("REQUEST_URL", request.toString());
-        Charset charset = Charset.forName("UTF8");
-
-        OutputStreamWriter wr= new OutputStreamWriter(urlConnection.getOutputStream(), charset);
-        wr.write(request.toString());
-        wr.close();
-
-
-        StringBuilder sb = new StringBuilder();
-        int HttpResult = urlConnection.getResponseCode();
-        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            System.out.println("" + sb.toString());
-        } else if(HttpResult == 400) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(urlConnection.getResponseMessage());
-        }
-
-        return new JSONObject(sb.toString());
-    }
-
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
@@ -329,10 +139,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
 
         showProgressDialog();
-
-        // TODO implement better
-        //fetchRestAuthToken(email, password);
-
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)

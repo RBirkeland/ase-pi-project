@@ -29,24 +29,36 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -65,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
     public static final String PREF_REST_TOKEN = "restToken";
     private static final String TAG = "LOGIN";
+    private static final String FIREBASE_REST_URL = "https://ase-pi-project.firebaseio.com";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private TextView navigationViewUser;
@@ -343,6 +356,196 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // TODO Put the String inside
         editor.putString(QR_CODE_STATUS_STRING_KEY, "Done");
         editor.apply();
+    }
+
+    public void getQRToken(final String week){
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            final String userUid = mAuth.getCurrentUser().getUid();
+
+            user.getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()) {
+                        Log.d("JWT-Token: ", task.getResult().getToken());
+
+                        String url = FIREBASE_REST_URL + "/user/id/" + userUid +"/week/"+week+".json?auth="+task.getResult().getToken();
+
+                        fetchRestAuthToken(url, "none", "tset");
+                    }
+                }
+            });
+        }
+    }
+
+    private void fetchRestAuthToken(String url, String email, String password) {
+        // TODO, what if, credentials are wrong...maybe on continue, after sign in
+
+        // send request to server
+
+        // get request from server
+
+        try{
+            JSONObject jsonObject = getJSONObjectFromURL(url);
+            //JSONArray jsonArray = getJSONArrayFromURL(url);
+
+            String jsonObjectString = jsonObject.toString();
+            //String jsonArrayString = jsonArray.toString();
+
+            //System.out.println("JSON OBJECT");
+            //Log.d("myLocalIDis: ", jsonObject.getString("localID"));
+            //Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
+            //System.out.println("JSON OBJECT");
+            // TODO Parse JSON
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+        }
+    }
+
+    public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        //urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONObject(sb.toString());
+    }
+
+    public static JSONArray getJSONArrayFromURL(String urlString) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        //urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        JSONObject request = new JSONObject();
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONArray(sb.toString());
+    }
+
+    public static JSONObject postJSONObjectToURL(String urlString, String email, String password) throws IOException, JSONException {
+
+        URL url = new URL(urlString);
+
+        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setDoOutput(true);
+        //urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        JSONObject request = new JSONObject();
+
+        request.put("email", email);
+        request.put("password", password);
+        request.put("returnSecureToken", "true");
+
+        Log.d("REQUEST_URL", request.toString());
+        Charset charset = Charset.forName("UTF8");
+
+        OutputStreamWriter wr= new OutputStreamWriter(urlConnection.getOutputStream(), charset);
+        wr.write(request.toString());
+        wr.close();
+
+
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = urlConnection.getResponseCode();
+        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else if(HttpResult == 400) {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            Log.d("RESULT: ", sb.toString());
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(urlConnection.getResponseMessage());
+        }
+
+        return new JSONObject(sb.toString());
     }
 
 
