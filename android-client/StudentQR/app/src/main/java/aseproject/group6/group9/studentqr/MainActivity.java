@@ -224,14 +224,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.LENGTH_SHORT).show();
 
         if(isLoginStatusValid()){
-            /*
-            String url = "http://www.ase-pi-project.appspot.com/rest/mockService/"+mAuth.getCurrentUser().getUid();
-            try {
-                new DownloadQRCodeTask(MainActivity.this).execute(new URL(url));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            */
             try {
                 new DownloadJSONQRCodeTask(MainActivity.this).execute();
             } catch (Exception e){
@@ -308,56 +300,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
-    }
-
-
-    private class DownloadQRCodeTask extends AsyncTask<URL, Integer, String> {
-
-        private Activity activity;
-
-        DownloadQRCodeTask(Activity activity) {
-            this.activity = activity;
-        }
-
-        protected String doInBackground(URL... urls) {
-            String rawAnswer = null;
-            try {
-                rawAnswer = new ClientResource(urls[0].toString()).get().getText();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ResourceException e) {
-                // TODO better log
-                e.printStackTrace();
-                Log.d("e", "404 or something");
-            }
-            return rawAnswer;
-        }
-
-        protected void onPostExecute(String result) {
-
-            ByteArrayInputStream is;
-            String content = "";
-            try {
-                is = new ByteArrayInputStream(result.getBytes("UTF-8"));
-
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document doc = builder.parse(is);
-
-                XPath xpath = XPathFactory.newInstance().newXPath();
-                NodeList nodes = (NodeList) xpath.evaluate("//*/qr/text()", doc, XPathConstants.NODESET);
-                int length = nodes.getLength();
-                for (int i = 0; i < length; i++) {
-                    //content += "\n" + (i + 1) + ". " + nodes.item(i).getNodeValue();
-                    content += nodes.item(i).getNodeValue();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            addQrSharedPreferences(content);
-            generateQRCodeImage(content);
-        }
     }
 
     private void addQrSharedPreferences(String qrCodeString) {
