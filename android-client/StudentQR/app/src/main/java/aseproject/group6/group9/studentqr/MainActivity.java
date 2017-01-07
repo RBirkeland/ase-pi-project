@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -54,9 +53,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
@@ -73,11 +73,13 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static SharedPreferences settings;
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
     public static final String PREF_REST_TOKEN = "restToken";
     private static final String TAG = "LOGIN";
     private static final String FIREBASE_REST_URL = "https://ase-pi-project.firebaseio.com";
+    private static final String USER_TOKEN = "userToken";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private TextView navigationViewUser;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         restoreQrCode();
 
@@ -135,11 +138,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         };
+
+        recreateUserToken();
     }
 
     private void restoreQrCode() {
         // Restore shared preferences
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String qrCodeString = settings.getString(QR_CODE_PREFERENCES_KEY, null);
         String qrCodeStatusString = settings.getString(QR_CODE_STATUS_STRING_KEY, null);
 
@@ -160,7 +164,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             qrCodeImage.setImageBitmap(bitmap);
             qrCodeImage.setVisibility(View.VISIBLE);
             TextView qrCodeStatus = (TextView) this.findViewById(R.id.qrCodeStatusString);
-            qrCodeStatus.setText("Fetched");
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String format = s.format(new Date());
+            addQrTimeSharedPreferences(format);
+            qrCodeStatus.setText(format);
 
         } catch (WriterException e) {
             e.printStackTrace();
@@ -217,12 +224,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.LENGTH_SHORT).show();
 
         if(isLoginStatusValid()){
+            /*
             String url = "http://www.ase-pi-project.appspot.com/rest/mockService/"+mAuth.getCurrentUser().getUid();
-
             try {
                 new DownloadQRCodeTask(MainActivity.this).execute(new URL(url));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
+            }
+            */
+            try {
+                new DownloadJSONQRCodeTask(MainActivity.this).execute();
+            } catch (Exception e){
+                e.printStackTrace();
+                Log.d("EXCEPTION", "exception :(");
             }
         } else {
             Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingNoAccount,
@@ -353,57 +367,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(QR_CODE_PREFERENCES_KEY, qrCodeString);
-        // TODO Put the String inside
-        editor.putString(QR_CODE_STATUS_STRING_KEY, "Done");
         editor.apply();
     }
 
-    public void getQRToken(final String week){
+    private void addQrTimeSharedPreferences(String time) {
+        /* Shared Preferences */
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(QR_CODE_STATUS_STRING_KEY, time);
+        editor.apply();
+    }
+
+
+    public String getQRTokenForWeek(final String week){
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             final String userUid = mAuth.getCurrentUser().getUid();
+            String url = FIREBASE_REST_URL + "/user/id/" + userUid +"/week/"+week+".json?auth="+settings.getString(USER_TOKEN, null);
+            try{
+                JSONObject jsonObject = getJSONObjectFromURL(url);
+                String jsonObjectString = jsonObject.toString();
 
-            user.getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.d("JWT-Token: ", task.getResult().getToken());
-
-                        String url = FIREBASE_REST_URL + "/user/id/" + userUid +"/week/"+week+".json?auth="+task.getResult().getToken();
-
-                        fetchRestAuthToken(url, "none", "tset");
-                    }
-                }
-            });
+                Log.d("RestAnswer_Full:", jsonObjectString);
+                Log.d("RestAnswer_Token: ", jsonObject.getString("token"));
+                Log.d("RestAnswer_VStatus:", jsonObject.getString("verified_status"));
+                return jsonObject.getString("token");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                e.getMessage();
+            }
         }
-    }
-
-    private void fetchRestAuthToken(String url, String email, String password) {
-        // TODO, what if, credentials are wrong...maybe on continue, after sign in
-
-        // send request to server
-
-        // get request from server
-
-        try{
-            JSONObject jsonObject = getJSONObjectFromURL(url);
-            //JSONArray jsonArray = getJSONArrayFromURL(url);
-
-            String jsonObjectString = jsonObject.toString();
-            //String jsonArrayString = jsonArray.toString();
-
-            //System.out.println("JSON OBJECT");
-            //Log.d("myLocalIDis: ", jsonObject.getString("localID"));
-            //Log.d("myRestTokenis: ", jsonObject.getString("idToken"));
-            //System.out.println("JSON OBJECT");
-            // TODO Parse JSON
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            e.printStackTrace();
-        }
+        return null;
     }
 
     public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
@@ -415,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         urlConnection.setRequestProperty("Content-Type", "application/json");
         urlConnection.setReadTimeout(10000 /* milliseconds */);
         urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        //urlConnection.setDoOutput(true);
         urlConnection.setDoInput(true);
         urlConnection.connect();
 
@@ -548,5 +545,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return new JSONObject(sb.toString());
     }
 
+    private class DownloadJSONQRCodeTask extends AsyncTask<Void, Integer, String> {
+
+        private Activity activity;
+
+        DownloadJSONQRCodeTask(Activity activity) {
+            this.activity = activity;
+        }
+
+        protected void onPreExecute() {
+            // Showing progress dialog
+            Toast.makeText(MainActivity.this, "QRCODEFetching",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        protected String doInBackground(Void... arg0) {
+            String rawAnswer = null;
+            try {
+                rawAnswer = getQRTokenForWeek("1");
+            } catch (ResourceException e) {
+                // TODO better log
+                e.printStackTrace();
+                Log.d("e", "404 or something");
+            }
+            return rawAnswer;
+        }
+
+        protected void onPostExecute(String result) {
+            Toast.makeText(MainActivity.this, "QRCodeTokenFetched: " + result,
+                    Toast.LENGTH_SHORT).show();
+            addQrSharedPreferences(result);
+            generateQRCodeImage(result);
+        }
+    }
+
+    private class DownloadUserTokenTask extends AsyncTask<Void, Integer, String> {
+
+        private Activity activity;
+
+        DownloadUserTokenTask(Activity activity) {
+            this.activity = activity;
+        }
+
+        protected void onPreExecute() {
+            // Showing progress dialog
+            Toast.makeText(MainActivity.this, "UserTokenFetching",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        protected String doInBackground(Void... arg0) {
+            String rawAnswer = null;
+            try {
+                rawAnswer =
+                        getUserToken();
+            } catch (ResourceException e) {
+                e.printStackTrace();
+            }
+            return rawAnswer;
+        }
+
+        protected void onPostExecute(String result) {
+            settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(USER_TOKEN, result);
+            editor.apply();
+            Toast.makeText(MainActivity.this, "UserTokenFetched: " + result,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String getUserToken(){
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            return user.getToken(false).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()) {
+                        Log.d("JWT-Token: ", task.getResult().getToken());
+                    }
+                }
+            }).getResult().getToken();
+        }
+        return null;
+    }
+
+    public void recreateUserToken(){
+        if(isLoginStatusValid()){
+            try {
+                new DownloadUserTokenTask(MainActivity.this).execute();
+            } catch (Exception e){
+                e.printStackTrace();
+                Log.d("EXCEPTION", "exception for usertokentask:(");
+            }
+        } else {
+            Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingNoAccount,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
 }
