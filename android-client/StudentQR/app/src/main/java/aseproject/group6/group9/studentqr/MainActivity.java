@@ -228,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new DownloadJSONQRCodeTask(MainActivity.this).execute();
             } catch (Exception e){
                 e.printStackTrace();
-                Log.d("EXCEPTION", "exception :(");
             }
         } else {
             Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingNoAccount,
@@ -322,6 +321,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.apply();
     }
 
+    private class DownloadJSONQRCodeTask extends AsyncTask<Void, Integer, String> {
+
+        private Activity activity;
+
+        DownloadJSONQRCodeTask(Activity activity) {
+            this.activity = activity;
+        }
+
+        protected void onPreExecute() {
+            Toast.makeText(MainActivity.this, "QRCODEFetching",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        protected String doInBackground(Void... arg0) {
+            String rawAnswer = null;
+            try {
+                rawAnswer = getQRTokenForWeek("1");
+            } catch (ResourceException e) {
+                // TODO better log
+                e.printStackTrace();
+                Log.d("e", "404 or something");
+            }
+            return rawAnswer;
+        }
+
+        protected void onPostExecute(String result) {
+            Toast.makeText(MainActivity.this, "QRCodeTokenFetched: " + result,
+                    Toast.LENGTH_SHORT).show();
+            addQrSharedPreferences(result);
+            generateQRCodeImage(result);
+        }
+    }
 
     public String getQRTokenForWeek(final String week){
         FirebaseUser user = mAuth.getCurrentUser();
@@ -330,11 +361,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String url = FIREBASE_REST_URL + "/user/id/" + userUid +"/week/"+week+".json?auth="+settings.getString(USER_TOKEN, null);
             try{
                 JSONObject jsonObject = getJSONObjectFromURL(url);
-                String jsonObjectString = jsonObject.toString();
-
-                Log.d("RestAnswer_Full:", jsonObjectString);
-                Log.d("RestAnswer_Token: ", jsonObject.getString("token"));
-                Log.d("RestAnswer_VStatus:", jsonObject.getString("verified_status"));
                 return jsonObject.getString("token");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -369,7 +395,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sb.append(line + "\n");
             }
             br.close();
-            System.out.println("" + sb.toString());
         } else if(HttpResult == 400) {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
@@ -378,47 +403,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sb.append(line + "\n");
             }
             br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
         } else {
             System.out.println(urlConnection.getResponseMessage());
         }
 
         return new JSONObject(sb.toString());
-    }
-
-    private class DownloadJSONQRCodeTask extends AsyncTask<Void, Integer, String> {
-
-        private Activity activity;
-
-        DownloadJSONQRCodeTask(Activity activity) {
-            this.activity = activity;
-        }
-
-        protected void onPreExecute() {
-            // Showing progress dialog
-            Toast.makeText(MainActivity.this, "QRCODEFetching",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        protected String doInBackground(Void... arg0) {
-            String rawAnswer = null;
-            try {
-                rawAnswer = getQRTokenForWeek("1");
-            } catch (ResourceException e) {
-                // TODO better log
-                e.printStackTrace();
-                Log.d("e", "404 or something");
-            }
-            return rawAnswer;
-        }
-
-        protected void onPostExecute(String result) {
-            Toast.makeText(MainActivity.this, "QRCodeTokenFetched: " + result,
-                    Toast.LENGTH_SHORT).show();
-            addQrSharedPreferences(result);
-            generateQRCodeImage(result);
-        }
     }
 
     private class DownloadUserTokenTask extends AsyncTask<Void, Integer, String> {
@@ -430,7 +419,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         protected void onPreExecute() {
-            // Showing progress dialog
             Toast.makeText(MainActivity.this, "UserTokenFetching",
                     Toast.LENGTH_SHORT).show();
         }
@@ -477,7 +465,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new DownloadUserTokenTask(MainActivity.this).execute();
             } catch (Exception e){
                 e.printStackTrace();
-                Log.d("EXCEPTION", "exception for usertokentask:(");
             }
         } else {
             Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingNoAccount,
