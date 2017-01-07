@@ -76,14 +76,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static SharedPreferences settings;
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
-    public static final String PREF_REST_TOKEN = "restToken";
     private static final String TAG = "LOGIN";
     private static final String FIREBASE_REST_URL = "https://ase-pi-project.firebaseio.com";
     private static final String USER_TOKEN = "userToken";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    TextView navigationViewUser;
-    TextView navigationViewEmail;
     NavigationView navigationView;
 
 
