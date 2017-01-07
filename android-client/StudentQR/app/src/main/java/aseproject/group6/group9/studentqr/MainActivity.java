@@ -430,63 +430,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return new JSONArray(sb.toString());
     }
-
-    public static JSONObject postJSONObjectToURL(String urlString, String email, String password) throws IOException, JSONException {
-
-        URL url = new URL(urlString);
-
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-        urlConnection.setReadTimeout(10000 /* milliseconds */);
-        urlConnection.setConnectTimeout(15000 /* milliseconds */);
-        urlConnection.setDoOutput(true);
-        //urlConnection.setDoInput(true);
-        urlConnection.connect();
-
-        JSONObject request = new JSONObject();
-
-        request.put("email", email);
-        request.put("password", password);
-        request.put("returnSecureToken", "true");
-
-        Log.d("REQUEST_URL", request.toString());
-        Charset charset = Charset.forName("UTF8");
-
-        OutputStreamWriter wr= new OutputStreamWriter(urlConnection.getOutputStream(), charset);
-        wr.write(request.toString());
-        wr.close();
-
-
-        StringBuilder sb = new StringBuilder();
-        int HttpResult = urlConnection.getResponseCode();
-        Log.d("RESPONSE MESSAGE IS: ", urlConnection.getResponseMessage());
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            System.out.println("" + sb.toString());
-        } else if(HttpResult == 400) {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getErrorStream(), "utf-8"));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            Log.d("RESULT: ", sb.toString());
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(urlConnection.getResponseMessage());
-        }
-
-        return new JSONObject(sb.toString());
-    }
-
+    
     private class DownloadJSONQRCodeTask extends AsyncTask<Void, Integer, String> {
 
         private Activity activity;
