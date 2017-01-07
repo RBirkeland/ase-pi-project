@@ -82,8 +82,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String USER_TOKEN = "userToken";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private TextView navigationViewUser;
-    private TextView navigationViewEmail;
+    TextView navigationViewUser;
+    TextView navigationViewEmail;
+    NavigationView navigationView;
 
 
     private GoogleApiClient client;
@@ -99,9 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
-        navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fetchQrCodeButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -124,10 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                TextView navigationViewUser = (TextView) findViewById(R.id.nav_account_name);
+                TextView navigationViewEmail = (TextView) findViewById(R.id.nav_user_email);
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    // TODO show them and search for nullpointer...
                     //navigationViewUser.setText("");
                     //navigationViewEmail.setText(user.getEmail());
                 } else {
