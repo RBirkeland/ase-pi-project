@@ -1,10 +1,14 @@
 package com.restapi;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
 import javax.ws.rs.Produces;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,6 +30,19 @@ import org.w3c.dom.Element;
  *
  */
 public class MockRestRessource extends ServerResource {
+    /*
+
+    private void doStuff(){
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setServiceAccount(
+                        new FileInputStream("../../../webapp/ase-pi-project-firebase-adminsdk.json"))
+                .setDatabaseUrl("https://ase-pi-project.firebaseio.com")
+                .build();
+
+        FirebaseApp.initializeApp(options);
+    }
+*/
+
 
     @Get("xml") @Produces("application/xml")
     public String getResource() {
