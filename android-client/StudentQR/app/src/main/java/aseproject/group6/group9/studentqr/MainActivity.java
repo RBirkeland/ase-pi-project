@@ -39,32 +39,17 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 /**
@@ -327,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String rawAnswer = null;
             try {
                 rawAnswer = getQRTokenForWeek("1");
-            } catch (ResourceException e) {
+            } catch (Exception e) {
                 // TODO better log
                 e.printStackTrace();
                 Log.d("e", "404 or something");
@@ -412,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 rawAnswer =
                         getUserToken();
-            } catch (ResourceException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return rawAnswer;
