@@ -1,6 +1,7 @@
 package aseproject.group6.group9.studentqr;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -42,6 +43,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 /**
@@ -200,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         hideProgressDialog();
         if (user != null) {
             loginStatusView.setText(getString(R.string.login_status_text, user.getEmail()));
-            //mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
             loginButtonView.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);
@@ -211,7 +213,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         } else {
             loginStatusView.setText(null);
-            //mDetailTextView.setText(null)
 
             loginButtonView.setVisibility(View.VISIBLE);
             emailView.setVisibility(View.VISIBLE);
@@ -228,14 +229,11 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_account) {
-
-        } else if (id == R.id.nav_slideshow) {
-            // Handle the action
-        } else if (id == R.id.nav_manage) {
-            // Handle the action
+        if (id == R.id.nav_main) {
+            // switching to Main Activity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_login_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -250,14 +250,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_account) {
-            // switching to Account Activity
+            // switching to Login Activity
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra(EXTRA_MESSAGE, "change");
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
-            // Handle the action
-        } else if (id == R.id.nav_manage) {
-            // Handle the action
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

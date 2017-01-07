@@ -6,14 +6,6 @@
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_account"
             android:title="@string/menu_account" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_settings" />
     </group>
 
 </menu>
