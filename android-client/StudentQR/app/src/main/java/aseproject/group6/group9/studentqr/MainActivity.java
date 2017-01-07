@@ -329,11 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.activity = activity;
         }
 
-        protected void onPreExecute() {
-            Toast.makeText(MainActivity.this, "QRCODEFetching",
-                    Toast.LENGTH_SHORT).show();
-        }
-
         protected String doInBackground(Void... arg0) {
             String rawAnswer = null;
             try {
@@ -347,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         protected void onPostExecute(String result) {
-            Toast.makeText(MainActivity.this, "QRCodeTokenFetched: " + result,
+            Toast.makeText(MainActivity.this, R.string.message_qrCodeFetchingSuccess,
                     Toast.LENGTH_SHORT).show();
             addQrSharedPreferences(result);
             generateQRCodeImage(result);
@@ -418,11 +413,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.activity = activity;
         }
 
-        protected void onPreExecute() {
-            Toast.makeText(MainActivity.this, "UserTokenFetching",
-                    Toast.LENGTH_SHORT).show();
-        }
-
         protected String doInBackground(Void... arg0) {
             String rawAnswer = null;
             try {
@@ -439,8 +429,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(USER_TOKEN, result);
             editor.apply();
-            Toast.makeText(MainActivity.this, "UserTokenFetched: " + result,
-                    Toast.LENGTH_SHORT).show();
         }
     }
 

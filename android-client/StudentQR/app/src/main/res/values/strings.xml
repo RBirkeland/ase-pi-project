@@ -40,5 +40,6 @@
     <!-- Nav Header Main -->
     <string name="nav_account_name">Not logged in :(</string>
     <string name="nav_user_email">Please sign in!</string>
+    <string name="message_qrCodeFetchingSuccess">QR Code is fetched.</string>
 
 </resources>
