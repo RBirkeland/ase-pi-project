@@ -2,14 +2,14 @@
   'use strict';
 
   angular
-    .module('app.waitList')
-    .directive('gzPartyTable', gzPartyTable);
+    .module('app.groupSelection')
+    .directive('groupChooserTable', groupChooserTable);
 
-  function gzPartyTable() {
+  function groupChooserTable() {
     return {
-      templateUrl: 'app/waitList/directives/partyTable.html',
+      templateUrl: 'app/groupSelection/directives/groupTable.html',
       restrict: 'E',
-      controller: PartyTableController,
+      controller: GroupTableController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
@@ -18,9 +18,9 @@
     };
   }
 
-  PartyTableController.$inject = ['textMessageService'];
+  GroupTableController.$inject = ['textMessageService'];
 
-  function PartyTableController(textMessageService) {
+  function GroupTableController(textMessageService) {
     var vm = this;
 
     vm.removeParty = removeParty;

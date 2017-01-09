@@ -2,15 +2,15 @@
   'use strict';
 
   angular
-    .module('app.waitList')
+    .module('app.groupSelection')
     .config(configFunction);
 
   configFunction.$inject = ['$routeProvider'];
 
   function configFunction($routeProvider) {
-    $routeProvider.when('/waitlist', {
-      templateUrl: 'app/waitList/groupSelection.html',
-      controller: 'WaitListController',
+    $routeProvider.when('/groupselection', {
+      templateUrl: 'app/groupSelection/groupSelection.html',
+      controller: 'GroupSelectionController',
       controllerAs: 'vm',
       resolve: {user: resolveUser}
     });

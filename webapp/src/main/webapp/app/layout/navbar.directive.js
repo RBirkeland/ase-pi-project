@@ -23,11 +23,13 @@
     vm.isLoggedIn = authService.isLoggedIn;
     vm.logout = logout;
 
+    /*
     if(authService.firebaseAuthObject.$getAuth() != null){
       vm.username = authService.firebaseAuthObject.$getAuth().providerData[0].uid;
     } else {
       vm.username = "";
     }
+    */
 
     function logout() {
       authService.logout();
