@@ -1,12 +1,12 @@
-<form ng-submit="vm.addParty()" class="form-inline party-form">
+<form ng-submit="vm.addGroup()" class="form-inline party-form">
     <div class="form-group">
-        <input ng-model="vm.newParty.name" type="text" class="form-control" placeholder="Name" required>
+        <input ng-model="vm.newGroup.name" type="text" class="form-control" placeholder="Name" required>
     </div>
     <div class="form-group">
-        <input ng-model="vm.newParty.phone" type="text" class="form-control" placeholder="Phone" required>
+        <input ng-model="vm.newGroup.weekday" type="text" class="form-control" placeholder="Weekday" required>
     </div>
     <div class="form-group">
-        <input ng-model="vm.newParty.size" type="number" class="form-control" placeholder="Size of party" required>
+        <input ng-model="vm.newGroup.time" type="text" class="form-control" placeholder="Time" required>
     </div>
-    <button type="submit" class="btn btn-primary">Add party</button>
+    <button type="submit" class="btn btn-primary">Add group</button>
 </form>

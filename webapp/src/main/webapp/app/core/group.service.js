@@ -5,15 +5,15 @@
     .module('app.core')
     .factory('groupService', groupService);
 
-  partyService.$inject = ['$firebaseArray', 'firebaseDataService'];
+  groupService.$inject = ['$firebaseArray', 'firebaseDataService'];
 
   function groupService($firebaseArray, firebaseDataService) {
 
-    var parties = null;
+    var groups = null;
     
     var service = {
-      Party: Party,
-      getPartiesByUser: getPartiesByUser,
+      Group: Group,
+      getGroups: getGroups,
       reset: reset
     };
 
@@ -21,25 +21,25 @@
 
     ////////////
 
-    function Party() {
+    function Group() {
       this.name = '';
-      this.phone = '';
-      this.size = '';
-      this.done = false;
-      this.notified = false;
+      this.time = '';
+      this.weekday = '';
+      this.students = '';
     }
 
-    function getPartiesByUser(uid) {
-      if (!parties) {
-        parties = $firebaseArray(firebaseDataService.users.child(uid).child('parties'));
+    function getGroups() {
+      if (!groups) {
+        groups = $firebaseArray(firebaseDataService.groups);
       }
-      return parties;
+      console.log(groups);
+      return groups;
     }
 
     function reset() {
-      if (parties) {
-        parties.$destroy();
-        parties = null;
+      if (groups) {
+        groups.$destroy();
+        groups = null;
       }
     }
 

@@ -9,11 +9,11 @@
     return {
       templateUrl: 'app/groupSelection/directives/groupChooserForm.html',
       restrict: 'E',
-      controller: PartyFormController,
+      controller: GroupFormController,
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        parties: '='
+        groups: '='
       }
     };
   }
@@ -23,12 +23,12 @@
   function GroupFormController(groupService) {
     var vm = this;
 
-    vm.newParty = new groupService.Party();
-    vm.addParty = addParty;
+    vm.newGroup = new groupService.Group();
+    vm.addGroup = addGroup;
 
-    function addParty() {
-      vm.parties.$add(vm.newParty);
-      vm.newParty = new groupService.Party();
+    function addGroup() {
+      vm.groups.$add(vm.newGroup);
+      vm.newGroup = new groupService.Group();
     }
   }
 

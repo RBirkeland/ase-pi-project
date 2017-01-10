@@ -13,30 +13,18 @@
       controllerAs: 'vm',
       bindToController: true,
       scope: {
-        parties: '='
+        groups: '='
       }
     };
   }
 
-  GroupTableController.$inject = ['textMessageService'];
-
-  function GroupTableController(textMessageService) {
+  function GroupTableController() {
     var vm = this;
 
-    vm.removeParty = removeParty;
-    vm.sendTextMessage = sendTextMessage;
-    vm.toggleDone = toggleDone;
+    vm.removeGroup = removeGroup;
 
-    function removeParty(party) {
-      vm.parties.$remove(party);
-    }
-
-    function sendTextMessage(party) {
-      textMessageService.sendTextMessage(party, vm.parties);
-    }
-
-    function toggleDone(party) {
-      vm.parties.$save(party);
+    function removeGroup(group) {
+      vm.groups.$remove(group);
     }
   }
 

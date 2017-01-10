@@ -31,7 +31,7 @@
     function login(user) {
       return authService.login(user)
         .then(function() {
-          $location.path('/waitlist');
+          $location.path('/groupselection');
         })
         .catch(function(error) {
           vm.error = error;
