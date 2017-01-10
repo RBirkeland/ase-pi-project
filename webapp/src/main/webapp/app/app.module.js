@@ -15,6 +15,7 @@
             'app.landing',
             'app.layout',
             'app.groupSelection',
+            'app.admin',
             'app.waitList'
         ])
         .config(configFunction)
