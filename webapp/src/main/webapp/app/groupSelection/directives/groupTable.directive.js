@@ -21,10 +21,11 @@
   function GroupTableController() {
     var vm = this;
 
-    vm.removeGroup = removeGroup;
+    vm.joinGroup = joinGroup;
 
-    function removeGroup(group) {
-      vm.groups.$remove(group);
+    function joinGroup(group) {
+      console.log("joiningGroup: " + group);
+      //vm.groups.$remove(group);
     }
   }
 

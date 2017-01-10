@@ -5,12 +5,12 @@
     .module('app.groupSelection')
     .controller('GroupSelectionController', GroupSelectionController);
 
-    GroupSelectionController.$inject = ['groupService', 'user'];
+    GroupSelectionController.$inject = ['groupSelectionService', 'user'];
 
-  function GroupSelectionController(groupService, user) {
+  function GroupSelectionController(groupSelectionService, user) {
     var vm = this;
     vm.user = user.providerData[0].uid;
-    vm.groups  = groupService.getGroups();
+    vm.groups  = groupSelectionService.getGroups();
   }
 
 })();

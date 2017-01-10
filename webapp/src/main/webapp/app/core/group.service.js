@@ -32,7 +32,6 @@
       if (!groups) {
         groups = $firebaseArray(firebaseDataService.groups);
       }
-      console.log(groups);
       return groups;
     }
 
