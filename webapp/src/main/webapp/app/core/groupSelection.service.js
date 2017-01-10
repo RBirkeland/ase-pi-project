@@ -10,10 +10,15 @@
     function groupSelectionService($firebaseArray, firebaseDataService) {
 
         var groups = null;
+        var sGroup = null;
+        var usersForGroup = null;
 
         var service = {
             Group: Group,
-            getGroups: getGroups
+            JoinGroup: JoinGroup,
+            getGroup: getGroup,
+            getGroups: getGroups,
+            getUsersForGroup: getUsersForGroup
         };
 
         return service;
@@ -27,11 +32,28 @@
             this.students = '';
         }
 
+        function JoinGroup(uid) {
+            this.email = uid;
+        }
+
+        function getGroup(group) {
+            if (!sGroup) {
+                sGroup = $firebaseArray(firebaseDataService.groups.child(group).child('students'));
+            }
+            return sGroup;
+        }
+
+        function getUsersForGroup(group) {
+            if (!usersForGroup) {
+                usersForGroup = $firebaseArray(firebaseDataService.groups.child(group).child('students'));
+            }
+            return usersForGroup;
+        }
+
         function getGroups() {
             if (!groups) {
                 groups = $firebaseArray(firebaseDataService.groups);
             }
-            console.log(groups);
             return groups;
         }
 
