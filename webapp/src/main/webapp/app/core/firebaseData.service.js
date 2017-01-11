@@ -12,6 +12,7 @@
       root: root,
       groups: root.child('groups'),
       users: root.child('users'),
+      user: root.child('user').child('id'),
       emails: root.child('emails'),
       textMessages: root.child('textMessages')
     };

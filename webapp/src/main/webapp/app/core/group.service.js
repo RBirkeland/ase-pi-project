@@ -25,7 +25,6 @@
       this.name = '';
       this.time = '';
       this.weekday = '';
-      this.students = '';
     }
 
     function getGroups() {

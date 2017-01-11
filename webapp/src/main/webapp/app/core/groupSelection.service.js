@@ -12,29 +12,39 @@
         var groups = null;
         var sGroup = null;
         var usersForGroup = null;
+        var sUser = null;
 
         var service = {
-            Group: Group,
             JoinGroup: JoinGroup,
+            JoinGroupStudentInformation: JoinGroupStudentInformation,
             getGroup: getGroup,
             getGroups: getGroups,
-            getUsersForGroup: getUsersForGroup
+            getUsersForGroup: getUsersForGroup,
+            getUserInformation: getUserInformation
         };
 
         return service;
 
         ////////////
 
-        function Group() {
-            this.name = '';
-            this.time = '';
-            this.weekday = '';
-            this.students = '';
+        function JoinGroup(name) {
+            this.email = name;
+
         }
 
-        function JoinGroup(uid) {
-            this.email = uid;
+        function JoinGroupStudentInformation(week){
+            this.week = week;
+            this.token = Math.random().toString(36);
+            this.verified_status = false;
         }
+
+        function getUserInformation(uid) {
+            if (!sUser) {
+                sUser = $firebaseArray(firebaseDataService.user.child(uid).child('week'));
+            }
+            return sUser;
+        }
+
 
         function getGroup(group) {
             if (!sGroup) {
