@@ -10,17 +10,21 @@
     function groupSelectionService($firebaseArray, firebaseDataService) {
 
         var groups = null;
+        var sUser = null;
         var sGroup = null;
         var usersForGroup = null;
-        var sUser = null;
+        var sUserWeek = null;
+        var userStatus = null;
 
         var service = {
             JoinGroup: JoinGroup,
+            JoinGroupStudentInformationWeek: JoinGroupStudentInformationWeek,
             JoinGroupStudentInformation: JoinGroupStudentInformation,
             getGroup: getGroup,
             getGroups: getGroups,
             getUsersForGroup: getUsersForGroup,
-            getUserInformation: getUserInformation
+            getUserInformation: getUserInformation,
+            getUserInformationWeek: getUserInformationWeek
         };
 
         return service;
@@ -29,20 +33,31 @@
 
         function JoinGroup(name) {
             this.email = name;
-
         }
 
-        function JoinGroupStudentInformation(week){
+        function JoinGroupStudentInformationWeek(week){
             this.week = week;
             this.token = Math.random().toString(36);
             this.verified_status = false;
         }
 
+        function JoinGroupStudentInformation(number){
+            this.groupAssigned = true;
+            this.groupNumber = number;
+        }
+
         function getUserInformation(uid) {
             if (!sUser) {
-                sUser = $firebaseArray(firebaseDataService.user.child(uid).child('week'));
+                sUser = $firebaseArray(firebaseDataService.user.child(uid));
             }
             return sUser;
+        }
+
+        function getUserInformationWeek(uid) {
+            if (!sUserWeek) {
+                sUserWeek = $firebaseArray(firebaseDataService.user.child(uid).child('week'));
+            }
+            return sUserWeek;
         }
 
 
