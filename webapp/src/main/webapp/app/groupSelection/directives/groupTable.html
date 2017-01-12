@@ -18,7 +18,7 @@
             <div>({{ group.time }})</div>
         </td>
         <td>
-            <button ng-click="vm.joinAlert(group)" class="btn btn-primary">Join</button>
+            <button ng-click="vm.joinAlert(group)" ng-show="!vm.isSignedToGroup()" class="btn btn-primary">Join</button>
         </td>
     </tr>
 </table>

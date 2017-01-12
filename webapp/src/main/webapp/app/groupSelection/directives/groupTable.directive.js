@@ -34,9 +34,12 @@
 
     vm.joinGroup = joinGroup;
     vm.joinAlert = joinAlert;
+    vm.isSignedToGroup = isSignedToGroup;
     vm.joinNewGroup = new groupSelectionService.JoinGroup(vm.user);
     //vm.joinNewGroupUser = new groupSelectionService.JoinGroupStudentInformation();
     vm.userInformation = groupSelectionService.getUserInformation(vm.userId);
+    vm.userGroupStatus = groupSelectionService.getUserGroupStatus(vm.userId);
+    //vm.userInformationGroup = vm.userInformation.$getRecord('groupAssigned').$value;
     vm.joinNewGroupUserGroup = new groupSelectionService.JoinGroupStudentInformationWeek(0);
     for(var i = 1; i < 13; i++){
         vm.joinNewGroupUserGroup[i] = new groupSelectionService.JoinGroupStudentInformationWeek(i);
@@ -44,11 +47,19 @@
 
     console.log("vmUser:" + vm.user);
     console.log(vm.userInformation);
-    console.log(vm.userInformation.$getRecord('groupAssigned'));
+
+    function isSignedToGroup(){
+        if(vm.userGroupStatus.$getRecord('groupAssigned') == null || vm.userGroupStatus.$getRecord('groupAssigned').$value == false){
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     function joinAlert(group)
     {
-        bootbox.confirm({
+        if(vm.userGroupStatus.$getRecord('groupAssigned') == null || vm.userGroupStatus.$getRecord('groupAssigned').$value == false){
+            bootbox.confirm({
                 message: "Do you really want to join: " + group.name + "?",
                 buttons: {
                     confirm: {
@@ -61,13 +72,21 @@
                     }
                 },
                 callback: function (result) {
-                    console.log('This was logged in the callback: ' + result);
+                    console.log('The result of the confirm box was: ' + result);
 
                     if(result == true){
                         vm.joinGroup(group);
                     }
                 }
             });
+        } else {
+            bootbox.alert({
+                message: "You are already signed to a group!",
+                callback: function () {
+                    console.log('Already in group box');
+                }
+            });
+        }
     }
 
     function joinGroup(group) {
@@ -76,24 +95,38 @@
       vm.usersForGroups = groupSelectionService.getUsersForGroup(group.$id);
       // TODO check if groupSelectionService.isUserInAnyGroup(uid);
       console.log(group.name);
-
-      var userFound  = false;
-      for(var student in group.students){
-        console.log(group.students[student].email);
-        if(group.students[student].email == vm.user){
-          userFound = true;
-          console.log("userFound");
-        }
-      }
-      if(!userFound){
+      console.log('UserInformation');
+      console.log(vm.userInformation);
+      console.log('UserGroupStatus');
+      console.log(vm.userGroupStatus);
+      if(vm.userGroupStatus.$getRecord('groupAssigned') == null || !vm.userGroupStatus.$getRecord('groupAssigned').$value){
           console.log("userNotFound therefore add it to the group");
+
           vm.group = groupSelectionService.getGroup(group.$id);
           vm.group.$add(vm.joinNewGroup);
           console.log(group.name);
-          vm.userDataGroup.$add(new groupSelectionService.JoinGroupStudentInformation(group.name));
+          //vm.userDataGroup.$add(new groupSelectionService.JoinGroupStudentInformation(group.name));
+          var groupStatusRef = firebase.database().ref('user/'+vm.userId+'/groupStatus');
+          groupStatusRef.set(new groupSelectionService.JoinGroupStudentInformation(group.name))
+              .then(function() {
+                  console.log('Synchronization succeeded');
+              })
+              .catch(function(error) {
+                  console.log('Synchronization failed');
+              });
+
           for(var i = 1; i < 13; i++){
-              vm.userData.$add(vm.joinNewGroupUserGroup[i]);
+              var weekRef = firebase.database().ref('user/'+vm.userId+'/week/'+i);
+              weekRef.set(new groupSelectionService.JoinGroupStudentInformationWeek())
+                  .then(function() {
+                      console.log('Synchronization succeeded => week '+i);
+                  })
+                  .catch(function(error) {
+                      console.log('Synchronization failed');
+                  });
+              // vm.userData.$add(vm.joinNewGroupUserGroup[i]);
           }
+        // TODO notify the user
       }
     }
   }

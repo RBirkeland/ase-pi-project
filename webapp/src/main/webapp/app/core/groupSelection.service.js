@@ -15,6 +15,7 @@
         var usersForGroup = null;
         var sUserWeek = null;
         var userStatus = null;
+        var groupStatus = null;
 
         var service = {
             JoinGroup: JoinGroup,
@@ -24,6 +25,7 @@
             getGroups: getGroups,
             getUsersForGroup: getUsersForGroup,
             getUserInformation: getUserInformation,
+            getUserGroupStatus: getUserGroupStatus,
             getUserInformationWeek: getUserInformationWeek
         };
 
@@ -36,7 +38,7 @@
         }
 
         function JoinGroupStudentInformationWeek(week){
-            this.week = week;
+            //this.week = week;
             this.token = Math.random().toString(36);
             this.verified_status = false;
         }
@@ -51,6 +53,13 @@
                 sUser = $firebaseArray(firebaseDataService.user.child(uid));
             }
             return sUser;
+        }
+
+        function getUserGroupStatus(uid) {
+            if (!groupStatus) {
+                groupStatus = $firebaseArray(firebaseDataService.user.child(uid).child('groupStatus'));
+            }
+            return groupStatus;
         }
 
         function getUserInformationWeek(uid) {
