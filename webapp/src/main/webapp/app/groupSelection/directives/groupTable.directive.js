@@ -45,9 +45,6 @@
         vm.joinNewGroupUserGroup[i] = new groupSelectionService.JoinGroupStudentInformationWeek(i);
     }
 
-    console.log("vmUser:" + vm.user);
-    console.log(vm.userInformation);
-
     function isSignedToGroup(){
         if(vm.userGroupStatus.$getRecord('groupAssigned') == null || vm.userGroupStatus.$getRecord('groupAssigned').$value == false){
             return false;

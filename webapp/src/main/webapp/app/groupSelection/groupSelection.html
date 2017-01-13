@@ -1,2 +1,3 @@
 <!--Table for displaying groups.-->
-<group-chooser-table groups="vm.groups"></group-chooser-table>
+<group-chooser-table groups="vm.groups" ng-show="!vm.isSignedToGroup()"></group-chooser-table>
+<user-info ng-show="vm.isSignedToGroup()"></user-info>
