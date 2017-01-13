@@ -35,9 +35,7 @@
                   vm.error = error;
               });
       } else {
-          bootbox.alert({
-              message: "Please sign up with your mytum email!"
-          });
+          bootbox.alert("Please sign up with your mytum email!");
       }
     }
 
@@ -52,12 +50,22 @@
 
     function login(user) {
       return authService.login(user)
-        .then(function() {
-          $location.path('/groupselection');
-        })
-        .catch(function(error) {
+      .then(function () {
+        if(user.emailVerified == true ){
+            $location.path('/groupselection');
+        } else {
+            bootbox.alert({
+                message: "Please verify your email first!",
+                callback: function () {
+                        console.log('reroute to login');
+                        $location.path('/login');
+                    }
+            });
+        }
+      })
+      .catch(function(error) {
           vm.error = error;
-        });
+      });
     }
   }
 
