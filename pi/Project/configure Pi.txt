@@ -1,0 +1,4 @@
+sudo raspi-config
+-> Enable Pi Camera
+sudo apt-get update
+sudo apt-get install python-picamera
