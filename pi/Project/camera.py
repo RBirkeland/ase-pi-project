@@ -5,24 +5,31 @@ import sys
 #import pyqrcode
 #import cv2
 import pifacecad
+import time
+import os
 
-cad=pifacecad.PiFaceCAD()
-listener=pifacecad.SwitchEventListener(chip=cad)
-
-if cad.switches[4].value == 1:
+def checkQR(event):
 	subprocess.call("fswebcam -r 640x480  image.jpg",shell=True)
 	cad.lcd.set_cursor(0,0)
 	cad.lcd.write("Taking Photo")
-else: 
-	cad.lcd.set_cursor(0,0)
-	cad.lcd.write("Fertig")
+	file_path = './image.jpg'
+	with open(file_path,'rb') as image_file:
+		image=Image.open(image_file)
+		image.load()
 	
-file_path = './image.jpg'
-with open(file_path,'rb') as image_file:
-	image=Image.open(image_file)
-	image.load()
-codes = zbarlight.scan_codes('qrcode',image)
-print('QR codes: %s'%codes)
+	codes = zbarlight.scan_codes('qrcode',image)
+	# remove double quotes
+	print('QR codes: %s'%codes)
+	cad.lcd.clear()
+	cad.lcd.set_cursor(0,0)
+	cad.lcd.write(str(codes))
+
+cad=pifacecad.PiFaceCAD()
+listener=pifacecad.SwitchEventListener(chip=cad)
+listener.register(4, pifacecad.IODIR_FALLING_EDGE, checkQR)
+listener.activate()
+
+
 #if d.decode('image.jpg'):
 	#cad.lcd.write('result: '+d.result)
 #	print("result"+d.result)
