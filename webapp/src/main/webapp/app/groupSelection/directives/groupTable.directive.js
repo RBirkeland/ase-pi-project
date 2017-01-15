@@ -42,7 +42,7 @@
     //vm.userInformationGroup = vm.userInformation.$getRecord('groupAssigned').$value;
     vm.joinNewGroupUserGroup = new groupSelectionService.JoinGroupStudentInformationWeek(0);
     for(var i = 1; i < 13; i++){
-        vm.joinNewGroupUserGroup[i] = new groupSelectionService.JoinGroupStudentInformationWeek(i);
+        vm.joinNewGroupUserGroup[i] = new groupSelectionService.JoinGroupStudentInformationWeek(i,vm.userId);
     }
 
     function isSignedToGroup(){
@@ -114,7 +114,7 @@
 
           for(var i = 1; i < 13; i++){
               var weekRef = firebase.database().ref('user/'+vm.userId+'/week/'+i);
-              weekRef.set(new groupSelectionService.JoinGroupStudentInformationWeek())
+              weekRef.set(new groupSelectionService.JoinGroupStudentInformationWeek(i,vm.userId))
                   .then(function() {
                       console.log('Synchronization succeeded => week '+i);
                   })

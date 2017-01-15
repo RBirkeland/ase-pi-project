@@ -37,9 +37,9 @@
             this.email = name;
         }
 
-        function JoinGroupStudentInformationWeek(week){
+        function JoinGroupStudentInformationWeek(week, uid){
             //this.week = week;
-            this.token = Math.random().toString(36);
+            this.token = week + "." + uid + "." + Math.random().toString(36);
             this.verified_status = false;
         }
 
