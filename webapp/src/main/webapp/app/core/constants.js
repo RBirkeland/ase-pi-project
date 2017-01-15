@@ -3,6 +3,6 @@
 
   angular
     .module('app.core')
-    .constant('PROTECTED_PATHS', ['/waitlist'], ['/groupselection'], ['/admin']);
+    .constant('PROTECTED_PATHS', ['/groupselection'], ['/admin']);
 
 })();

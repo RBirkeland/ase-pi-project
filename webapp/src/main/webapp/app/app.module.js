@@ -15,8 +15,7 @@
             'app.landing',
             'app.layout',
             'app.groupSelection',
-            'app.admin',
-            'app.waitList'
+            'app.admin'
         ])
         .config(configFunction)
         .run(runFunction);

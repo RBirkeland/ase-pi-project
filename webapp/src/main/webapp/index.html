@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <title>StudentQR</title>
+    <!--Bootstrap latest compiled and minified CSS-->
+    <link rel="stylesheet" href="app/libs/bootstrap.min.css">
+    <!--Optional theme-->
+    <link rel="stylesheet" href="app/libs/bootstrap-theme.min.css">
+    <!--Custom CSS-->
+    <link rel="stylesheet" href="content/css/app.css"/>
+</head>
+<body>
+
+    <!--navbar directive that stays at the top of every page-->
+    <gz-navbar></gz-navbar>
+
+    <!--Main content that changes based on route-->
+    <div ng-view class="container"></div>
+
+    <!--Third-party JS-->
+    <script src="app/libs/jquery-3.1.1.min.js"></script>
+    <script src="app/libs/bootstrap.min.js"></script>
+    <script src="app/libs/angular.min.js"></script>
+    <script src="app/libs/angular-route-1.5.0.js"></script>
+    <script src="app/libs/firebase-3.6.4.js"></script>
+    <script src="app/libs/bootbox.min.js"></script>
+    <script>
+        // Initialize Firebase
+    </script>
+    <script src="app/libs/angularfire-2.2.min.js"></script>
+
+    <!--main app module-->
+    <script src="app/app.module.js"></script>
+
+    <!--auth module-->
+    <script src="app/auth/auth.module.js"></script>
+    <script src="app/auth/config.route.js"></script>
+    <script src="app/auth/auth.controller.js"></script>
+    <script src="app/auth/auth.service.js"></script>
+    <script src="app/auth/authForm.directive.js"></script>
+    <script src="app/auth/verifyEmail.directive.js"></script>
+
+    <!--landing module-->
+    <script src="app/landing/landing.module.js"></script>
+    <script src="app/landing/config.route.js"></script>
+
+    <!--groupSelection module-->
+    <script src="app/groupSelection/groupSelection.module.js"></script>
+    <script src="app/groupSelection/config.route.js"></script>
+    <script src="app/groupSelection/groupSelection.controller.js"></script>
+    <script src="app/groupSelection/directives/groupTable.directive.js"></script>
+    <script src="app/groupSelection/directives/userInfo.directive.js"></script>
+
+    <!--admin module-->
+    <script src="app/admin/admin.module.js"></script>
+    <script src="app/admin/config.route.js"></script>
+    <script src="app/admin/admin.controller.js"></script>
+    <script src="app/admin/directives/groupForm.directive.js"></script>
+    <script src="app/admin/directives/groupTable.directive.js"></script>
+
+    <!--core module-->
+    <script src="app/core/core.module.js"></script>
+    <script src="app/core/constants.js"></script>
+    <script src="app/core/firebaseData.service.js"></script>
+    <script src="app/core/group.service.js"></script>
+    <script src="app/core/groupSelection.service.js"></script>
+    <script src="app/core/userInfo.service.js"></script>
+
+    <!--layout module-->
+    <script src="app/layout/layout.module.js"></script>
+    <script src="app/layout/navbar.directive.js"></script>
+
+</body>
+</html>

@@ -16,11 +16,13 @@
     vm.isSignedToGroup = isSignedToGroup;
 
     function isSignedToGroup(){
-        if(vm.userGroupStatus.$getRecord('groupAssigned') == null || vm.userGroupStatus.$getRecord('groupAssigned').$value == false){
-          return false;
-        } else {
-            return true;
-        }
+        vm.userGroupStatus.$loaded().then(function () {
+            if(vm.userGroupStatus.$getRecord('groupAssigned') == null || vm.userGroupStatus.$getRecord('groupAssigned').$value == false){
+                return false;
+            } else {
+                return true;
+            }
+        });
     }
 
   }
