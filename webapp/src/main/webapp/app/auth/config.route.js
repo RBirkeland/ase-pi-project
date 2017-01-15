@@ -19,6 +19,11 @@
       controller: 'AuthController',
       controllerAs: 'vm'
     });
+    $routeProvider.when('/verifyEmail/:verifyEmail', {
+        templateUrl: 'app/auth/verifyEmail.html',
+        controller: 'emailVerifyController',
+        controllerAs: 'vm'
+    });
   }
 
   runFunction.$inject = ['$location', 'authService', 'PROTECTED_PATHS'];

@@ -33,8 +33,12 @@
 
       vm.group = userInfoService.getGroupForUser(vm.userId);
       vm.group.$loaded().then(function() {
-          vm.groupName = vm.group.$getRecord('groupNumber').$value;
-          console.log(vm.group.$getRecord('groupNumber').$value);
+          if(vm.group != null){
+              vm.groupName = vm.group.$getRecord('groupNumber').$value;
+              console.log(vm.group.$getRecord('groupNumber').$value);
+          } else {
+              console.log(vm.group + "is null :(");
+          }
       });
   }
 
