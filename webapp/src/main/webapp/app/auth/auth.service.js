@@ -16,6 +16,7 @@
       login: login,
       logout: logout,
       isLoggedIn: isLoggedIn,
+      createUserDB: createUserDB
     };
 
     return service;
@@ -36,6 +37,24 @@
 
     function isLoggedIn() {
       return firebaseAuthObject.$getAuth();
+    }
+
+    function createUserDB() {
+       var user = firebaseAuthObject.$getAuth();
+       console.log(user);
+       console.log(user.uid);
+       console.log(user.email);
+       var userMailRef = firebase.database().ref('user/'+user.uid+'/');
+       userMailRef.update({
+           bonusStatus: {
+             presented : false,
+             received : false
+           },
+           groupStatus: {
+             groupAssigned : false
+           },
+           email : user.email
+       });
     }
 
   }

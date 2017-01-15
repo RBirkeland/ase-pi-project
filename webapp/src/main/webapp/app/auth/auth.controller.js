@@ -21,8 +21,12 @@
                     .then(function () {
                         return vm.login(user);
                     })
+                    .then(function(){
+                        authService.createUserDB();
+                    })
                     .then(function () {
                         var user = firebase.auth().currentUser;
+
                         user.sendEmailVerification().then(function () {
                             bootbox.alert('Email sent!\nPlease verify your email address!');
                             // Email sent.
