@@ -36,10 +36,8 @@
     vm.joinAlert = joinAlert;
     vm.isSignedToGroup = isSignedToGroup;
     vm.joinNewGroup = new groupSelectionService.JoinGroup(vm.user);
-    //vm.joinNewGroupUser = new groupSelectionService.JoinGroupStudentInformation();
     vm.userInformation = groupSelectionService.getUserInformation(vm.userId);
     vm.userGroupStatus = groupSelectionService.getUserGroupStatus(vm.userId);
-    //vm.userInformationGroup = vm.userInformation.$getRecord('groupAssigned').$value;
     vm.joinNewGroupUserGroup = new groupSelectionService.JoinGroupStudentInformationWeek(0);
     for(var i = 1; i < 13; i++){
         vm.joinNewGroupUserGroup[i] = new groupSelectionService.JoinGroupStudentInformationWeek(i,vm.userId);
@@ -77,32 +75,16 @@
                 }
             });
         } else {
-            bootbox.alert({
-                message: "You are already signed to a group!",
-                callback: function () {
-                    console.log('Already in group box');
-                }
-            });
+            bootbox.alert("You are already signed to a group!");
         }
     }
 
     function joinGroup(group) {
-      console.log("joiningGroup: " + group + " (user): "+ vm.user);
-      console.log(group);
       vm.usersForGroups = groupSelectionService.getUsersForGroup(group.$id);
       // TODO check if groupSelectionService.isUserInAnyGroup(uid);
-      console.log(group.name);
-      console.log('UserInformation');
-      console.log(vm.userInformation);
-      console.log('UserGroupStatus');
-      console.log(vm.userGroupStatus);
       if(vm.userGroupStatus.$getRecord('groupAssigned') == null || !vm.userGroupStatus.$getRecord('groupAssigned').$value){
-          console.log("userNotFound therefore add it to the group");
-
           vm.group = groupSelectionService.getGroup(group.$id);
           vm.group.$add(vm.joinNewGroup);
-          console.log(group.name);
-          //vm.userDataGroup.$add(new groupSelectionService.JoinGroupStudentInformation(group.name));
           var groupStatusRef = firebase.database().ref('user/'+vm.userId+'/groupStatus');
           groupStatusRef.set(new groupSelectionService.JoinGroupStudentInformation(group.name))
               .then(function() {
@@ -121,7 +103,6 @@
                   .catch(function(error) {
                       console.log('Synchronization failed');
                   });
-              // vm.userData.$add(vm.joinNewGroupUserGroup[i]);
           }
         // TODO notify the user
       }
