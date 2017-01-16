@@ -11,9 +11,7 @@
     var service = {
       root: root,
       groups: root.child('groups'),
-      users: root.child('users'),
-      user: root.child('user'),
-      emails: root.child('emails')
+      user: root.child('user')
     };
 
     return service;
