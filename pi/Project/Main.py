@@ -16,10 +16,10 @@ week=1
 
 def checkQR(event):
 	Dis.display("Taking Photo",cad)
-	file_path = Cam.take_photo()
-	print(file_path)
+	#file_path = Cam.take_photo()
+	#print(file_path)
 	Dis.display("checking QR code",cad)
-	code = QR.checkQR(file_path)
+	code = QR.checkQR("./image.jpg")
 	Dis.display(str(code),cad)
 	if(code==None):
 		Dis.display("try again !",cad)
