@@ -11,17 +11,6 @@
                     firebase.auth()
                         .applyActionCode($routeParams.oobCode)
                         .then(function(data) {
-                            /*
-                            if (authService.firebaseAuthObject.$getAuth() != null) {
-                                vm.user = authService.firebaseAuthObject.$getAuth().providerData[0].uid;
-                                vm.userId = authService.firebaseAuthObject.$getAuth().uid;
-                            } else {
-                                return;
-                            }
-                            var userMailRef = firebase.database().ref('user/'+vm.userId+'/');
-                            userMailRef.update({ emailVerified: true });
-                            // the above is assuming you have root/users/uid/
-                            */
                             bootbox.alert({
                                 message: "Verification complete!",
                                 callback: function () {
