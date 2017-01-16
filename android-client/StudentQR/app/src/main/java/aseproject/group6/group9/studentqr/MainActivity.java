@@ -20,7 +20,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,11 +63,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static SharedPreferences settings;
     public static final String QR_CODE_PREFERENCES_KEY = "qrCodeString";
     public static final String QR_CODE_STATUS_STRING_KEY = "qrCodeStatusString";
+    public static final String QR_CODE_SPINNER_STRING_KEY = "qrCodeSpinnerString";
     private static final String TAG = "LOGIN";
     private static final String FIREBASE_REST_URL = "https://ase-pi-project.firebaseio.com";
     private static final String USER_TOKEN = "userToken";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    Spinner spinner;
     NavigationView navigationView;
 
 
@@ -95,6 +99,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        spinner = (Spinner) findViewById(R.id.qrCodeSpinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(QR_CODE_SPINNER_STRING_KEY, parent.getItemAtPosition(position).toString());
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -311,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected String doInBackground(Void... arg0) {
             String rawAnswer = null;
             try {
-                rawAnswer = getQRTokenForWeek("1");
+                rawAnswer = getQRTokenForWeek();
             } catch (Exception e) {
                 // TODO better log
                 e.printStackTrace();
@@ -328,11 +348,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public String getQRTokenForWeek(final String week){
+    public String getQRTokenForWeek(){
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             final String userUid = mAuth.getCurrentUser().getUid();
-            String url = FIREBASE_REST_URL + "/user/id/" + userUid +"/week/"+week+".json?auth="+settings.getString(USER_TOKEN, null);
+            String url = FIREBASE_REST_URL + "/user/" + userUid +"/week/"+spinner.getSelectedItem().toString()+".json?auth="+settings.getString(USER_TOKEN, null);
             try{
                 JSONObject jsonObject = getJSONObjectFromURL(url);
                 return jsonObject.getString("token");

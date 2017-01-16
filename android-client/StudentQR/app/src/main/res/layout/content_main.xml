@@ -19,6 +19,13 @@
         android:layout_height="wrap_content"
         android:text="@string/qr_code_status_string"
         />
+    <Spinner
+        android:layout_below="@id/qrCodeStatusString"
+        android:id="@+id/qrCodeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/week"
+        />
 
     <ImageView
         android:layout_width="match_parent"
