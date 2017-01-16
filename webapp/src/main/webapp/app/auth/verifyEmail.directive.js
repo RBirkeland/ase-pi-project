@@ -5,8 +5,6 @@
         .controller('emailVerifyController', ['$scope', 'authService', 'firebaseDataService', '$routeParams', '$location',
             function($scope, authService, firebaseDataService, $routeParams, $location) {
             var vm = this;
-
-            console.log($routeParams.oobCode);
                 $scope.doVerify = function() {
                     firebase.auth()
                         .applyActionCode($routeParams.oobCode)

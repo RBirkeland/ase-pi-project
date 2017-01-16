@@ -26,7 +26,6 @@
         function getUsers() {
             if (!users) {
                 users = ($firebaseArray(firebaseDataService.user));
-                console.log(users);
             }
             return users;
         }

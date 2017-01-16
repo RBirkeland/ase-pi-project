@@ -41,9 +41,6 @@
 
     function createUserDB() {
        var user = firebaseAuthObject.$getAuth();
-       console.log(user);
-       console.log(user.uid);
-       console.log(user.email);
        var userMailRef = firebase.database().ref('user/'+user.uid+'/');
        userMailRef.update({
            bonusStatus: {
