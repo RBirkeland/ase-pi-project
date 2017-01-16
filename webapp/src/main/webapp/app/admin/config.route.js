@@ -38,7 +38,6 @@
           return authService.firebaseAuthObject.$requireSignIn();
         });
     }
-   // return authService.firebaseAuthObject.$requireSignIn();
   }
 
 })();

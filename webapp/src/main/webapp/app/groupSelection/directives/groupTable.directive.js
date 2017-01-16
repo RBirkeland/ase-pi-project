@@ -27,7 +27,6 @@
           vm.userId = authService.firebaseAuthObject.$getAuth().uid;
           vm.userData = groupSelectionService.getUserInformationWeek(vm.userId);
           vm.userDataGroup = groupSelectionService.getUserInformation(vm.userId);
-         console.log(vm.userId);
       } else {
           return;
       }

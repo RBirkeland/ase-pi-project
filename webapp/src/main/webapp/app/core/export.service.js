@@ -19,10 +19,6 @@
 
         ////////////
 
-        function getBonusStatus(){
-            return evaluateBonus();
-        }
-
         function getUsers() {
             if (!users) {
                 users = ($firebaseArray(firebaseDataService.user));

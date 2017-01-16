@@ -1,1 +1,19 @@
-<div><strong>You joined {{ vm.groupName }}</strong></div>
+<div><strong>Your Group is: {{ vm.groupName }}</strong></div>
+<div><strong>Your Presentation status is: {{ vm.info['$$state']['value'].presented }}</strong></div>
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>Week</th>
+        <th>Verified Attendance</th>
+    </tr>
+    </thead>
+    <tr ng-repeat="info in vm.info['$$state']['value'].week">
+        <td>
+            <div><strong>{{ info.weekNumber }}</strong></div>
+        </td>
+        <td>
+            <div>{{ info.status }}</div>
+        </td>
+    </tr>
+    <!-- presentation & bonusStatus -->
+</table>

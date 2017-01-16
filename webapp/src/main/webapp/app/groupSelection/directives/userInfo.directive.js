@@ -31,11 +31,11 @@
           console.log('authentification did not work');
       }
 
+      vm.info = userInfoService.getUserInformation(vm.userId);
       vm.group = userInfoService.getGroupForUser(vm.userId);
       vm.group.$loaded().then(function() {
           if(vm.group != null){
               vm.groupName = vm.group.$getRecord('groupNumber').$value;
-              console.log(vm.group.$getRecord('groupNumber').$value);
           } else {
               console.log(vm.group + "is null :(");
           }
