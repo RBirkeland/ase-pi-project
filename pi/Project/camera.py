@@ -7,5 +7,5 @@ import time
 import os
 
 def take_photo():
-	subprocess.call("fswebcam -r 640x480  image.jpg",shell=True)
-	return = './image.jpg'
+	subprocess.call("fswebcam -r 640x480 image.jpg",shell=True)
+	return './image.jpg'
