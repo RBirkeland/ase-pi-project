@@ -11,7 +11,7 @@ import database as Data
 import qr_code as QR
 import display as Dis
 
-presentation=True
+presentation=False
 week=1
 
 def checkQR(event):
@@ -27,30 +27,31 @@ def checkQR(event):
 		Dis.display(Data.addStudent(code, week, presentation),cad)
 		
 def changeWeek(event):
+	global week
 	if(week<14):
 		week=week+1
 	else:
 		week=1
-	showStatus
+	showStatus()
 
 def changeMode(event):
+	global presentation
 	if(presentation==True):
 		presentation=False
 	else:
 		presentation=True
-	showStatus
+	showStatus()
 
 def showStatus():
 	if(presentation==True):
-		Dis.display("Week: "+week+"\nMode: Presentation",cad)
+		Dis.display("Week: "+str(week)+"\nMode: Presentation",cad)
 	else:
-		Dis.display("Week: "+week+"\nMode: Attendance",cad)
+		Dis.display("Week: "+str(week)+"\nMode: Attendance",cad)
 	
 
 cad=pifacecad.PiFaceCAD()
-Dis.display("Starting Session",cad)
+showStatus()
 Data.startSession
-showStatus
 listener=pifacecad.SwitchEventListener(chip=cad)
 listener.register(4, pifacecad.IODIR_FALLING_EDGE, checkQR)
 listener.register(0, pifacecad.IODIR_FALLING_EDGE, changeWeek)
