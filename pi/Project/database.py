@@ -15,8 +15,8 @@ piToken = startSession()
 
 def addStudent(studentToken, week, presentation):
 
-
 	paramToken = studentToken[3:-2]
+	studentToken = str(studentToken)
 	paramToken = studentToken.split('.')[1]
 	pprint(paramToken)
 	urlGetUserTokenForWeek = "https://ase-pi-project.firebaseio.com/user/"+paramToken+"/week/"+str(week)+".json?auth="+str(piToken)

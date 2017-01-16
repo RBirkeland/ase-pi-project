@@ -11,15 +11,15 @@ import database as Data
 import qr_code as QR
 import display as Dis
 
-presentation=False
+presentation=True
 week=1
 
 def checkQR(event):
 	Dis.display("Taking Photo",cad)
-	#file_path = Cam.take_photo()
-	#print(file_path)
+	file_path = Cam.take_photo()
+	print(file_path)
 	Dis.display("checking QR code",cad)
-	code = QR.checkQR("./image.jpg")
+	code = QR.checkQR(file_path)
 	Dis.display(str(code),cad)
 	if(code==None):
 		Dis.display("try again !",cad)
