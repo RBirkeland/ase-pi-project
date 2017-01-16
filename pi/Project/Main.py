@@ -20,7 +20,7 @@ def checkQR(event):
 	print(file_path)
 	Dis.display("checking QR code",cad)
 	code = QR.checkQR(file_path)
-	Dis.display(str(code),cad)
+	Dis.display("Connecting"cad)
 	if(code==None):
 		Dis.display("try again !",cad)
 	else:
