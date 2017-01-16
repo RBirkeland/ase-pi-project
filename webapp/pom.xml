@@ -5,17 +5,13 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <groupId>com.example.guestbook</groupId>
-    <artifactId>guestbook</artifactId>
+    <groupId>com.student.qr</groupId>
+    <artifactId>ase-pi-project</artifactId>
     
 <!-- [START set_versions] -->
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <appengine.sdk.version>1.9.48</appengine.sdk.version>
-
-        <objectify.version>5.1.5</objectify.version>
-        <guava.version>18.0</guava.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -24,16 +20,6 @@
     </prerequisites>
 <!-- [END set_versions] -->
 
-<!-- [START repositories] -->
-    <repositories>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
-        </repository>
-    </repositories>
-<!-- [END repositories] -->
-
     <dependencies>
         <!-- Compile/runtime dependencies -->
         <dependency>
@@ -41,73 +27,6 @@
             <artifactId>appengine-api-1.0-sdk</artifactId>
             <version>${appengine.sdk.version}</version>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-<!-- [START Objectify_Dependencies] -->
-        <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-          <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>com.googlecode.objectify</groupId>
-          <artifactId>objectify</artifactId>
-          <version>${objectify.version}</version>
-        </dependency>
-<!-- [END Objectify_Dependencies] -->
-
-<!-- [START Rest_Dependencies] -->
-
-		<dependency>
-		  <groupId>org.restlet.jse</groupId>
-		  <artifactId>org.restlet</artifactId>
-		  <version>2.3.4</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.restlet.jse</groupId>
-		  <artifactId>org.restlet.ext.simple</artifactId>
-		  <version>2.3.4</version>
-		</dependency>
-		 <dependency>
-		  <groupId>org.restlet.jee</groupId>
-		  <artifactId>org.restlet.ext.servlet</artifactId>
-		  <version>2.3.4</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <version>7.0</version>
-		</dependency>
-		<dependency>
-	    <groupId>com.sun.xml.bind</groupId>
-	    <artifactId>jaxb-core</artifactId>
-	    <version>2.2.8-b01</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.sun.xml.bind</groupId>
-		    <artifactId>jaxb-impl</artifactId>
-		    <version>2.2-promoted-b65</version>
-		</dependency>
-
-        <!-- [END Rest_Dependencies] -->
-
-        <!-- [START ACCOUNT Dependencies] -->
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>4.0.3</version>
-        </dependency>
-        <!-- [END ACCOUNT Dependencies] -->
 
         <!-- Test Dependencies -->
         <dependency>
