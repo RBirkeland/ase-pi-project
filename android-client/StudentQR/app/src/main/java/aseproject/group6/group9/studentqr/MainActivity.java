@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("ERROR", e.getMessage());
             Log.d("e", "There was an unknown exception during QRCodeGeneration");
             Toast.makeText(MainActivity.this, R.string.err_msg_qr_fetching,
                     Toast.LENGTH_LONG).show();
@@ -333,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 rawAnswer = getQRTokenForWeek();
             } catch (Exception e) {
-                // TODO better log
                 e.printStackTrace();
                 Log.d("e", "404 or something");
             }
