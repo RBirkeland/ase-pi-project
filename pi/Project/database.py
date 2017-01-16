@@ -14,9 +14,13 @@ def startSession():
 	
 def addStudent(studentToken, week, presentation):
 	
-	urlGetUserTokenForWeek = "https://ase-pi-project.firebaseio.com/user/"+str(studentToken)+"/week/"+str(week)+".json?auth="+str(piToken)
+	pprint(piToken)
+#	urlGetUserTokenForWeek = "https://ase-pi-project.firebaseio.com/user/"+str(studentToken)+"/week/"+str(week)+".json?auth="+str(piToken)
+	urlGetUserTokenForWeek = "https://ase-pi-project.firebaseio.com/user/⁠⁠⁠D9IVpZ2ldkU6tuTGXGL5BjIomdJ2/week/"+str(week)+".json?auth="+str(piToken).decode('UTF-8')
 	userTokenRequest = requests.get(urlGetUserTokenForWeek, json=payload)
 	userTokenData = json.loads(userTokenRequest.text)
+	pprint(userTokenData)
+	
 
 	if str(userTokenData["token"]) == week+"."+studentToken+".randomToken":
 		if presentation==False:

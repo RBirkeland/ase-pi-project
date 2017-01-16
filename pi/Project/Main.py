@@ -21,7 +21,7 @@ def checkQR(event):
 	Dis.display("checking QR code",cad)
 	code = QR.checkQR(file_path)
 	Dis.display(str(code),cad)
-	if(code=="None"):
+	if(code==None):
 		Dis.display("try again !",cad)
 	else:
 		Dis.display(Data.addStudent(code, week, presentation),cad)
@@ -46,8 +46,10 @@ def showStatus():
 	else:
 		Dis.display("Week: "+week+"\nMode: Attendance",cad)
 	
-Data.startSession
+
 cad=pifacecad.PiFaceCAD()
+Dis.display("Starting Session",cad)
+Data.startSession
 showStatus
 listener=pifacecad.SwitchEventListener(chip=cad)
 listener.register(4, pifacecad.IODIR_FALLING_EDGE, checkQR)
