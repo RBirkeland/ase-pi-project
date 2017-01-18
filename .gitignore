@@ -50,6 +50,10 @@ target/*
 webapp/target/*
 webapp/src/main/webapp/.idea*
 
+pi/Project/.idea*
+Unbenannt.PNG
+Zeitachse mit Meilensteinen1.xlsx
+
 #sensitive stuff
 webapp/src/main/webapp/index.html
 src/main/webapp/index.html
